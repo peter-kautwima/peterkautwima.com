@@ -235,6 +235,16 @@ input, select, textarea {
 		top: 0;
 	}
 
+	.projects-icon {
+		background: url(../projects-icon.png) no-repeat center center;
+    background-size: 50%;
+    border: 1px solid black !important;
+    width: 70px;
+    height: 70px;
+    border-radius: 90%;
+		top: 22px;
+	}
+
 	#projects {
 		background: white;
 		width: 100%;

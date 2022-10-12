@@ -239,14 +239,23 @@ input, select, textarea {
 		background: white;
 	}
 
-	.projects-icon {
-		background: url(../projects-icon.png) no-repeat center center;
-    background-size: 50%;
+	.projects-icon,
+	.cv-icon {
     border: 1px solid black !important;
     width: 70px;
     height: 70px;
     border-radius: 90%;
 		top: 22px;
+	}
+
+	.projects-icon {
+		background: url(../projects-icon.png) no-repeat center center;
+    background-size: 50%;
+	}
+
+	.cv-icon {
+		background: url(../cv-icon.png) no-repeat center center;
+		background-size: 50%;
 	}
 
 	#projects {

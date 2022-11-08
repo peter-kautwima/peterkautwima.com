@@ -285,6 +285,11 @@ input, select, textarea {
 		text-align: left;
 	}
 
+	.home-icon {
+		background: url(../house-solid.png) no-repeat center center;
+		background-size: 50%;
+	}
+
 	#projects h1 {
 		margin-bottom: 3rem;
 	}
@@ -333,6 +338,20 @@ input, select, textarea {
 		outline: none;
 		border-radius: 5px;
 		transition: all 0.3s ease-in-out;
+	}
+
+	.home-button {
+		display: flex;
+		
+		
+	}
+
+	.home-button h1 {
+		margin: 0;
+		font-size: 2rem;
+		margin-right: 30px;
+
+
 	}
 
 	.button:hover,

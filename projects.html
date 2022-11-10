@@ -20,15 +20,15 @@
   <body class="is-preload projects">
     <div id="wrapper">
       <div id="bg"></div>
-			<div id="overlay"></div>
+      <div id="overlay"></div>
       <div id="projects">
         <!-- Header -->
         <header id="header">
-         <div class="home-button">
-          <h1><a href="https://www.peterkautwima.com">Home</a></h1>
-          <!-- <img src="./assets/house-solid.svg" alt="reOS Home" /> -->
-          <h1>Projects</h1>
-         </div>
+          <div class="home-button">
+            <h1><a href="https://www.peterkautwima.com">Home</a></h1>
+            <!-- <img src="./assets/house-solid.svg" alt="reOS Home" /> -->
+            <h1>Projects</h1>
+          </div>
         </header>
 
         <div class="projects-list">
@@ -39,6 +39,12 @@
             <div>
               <h2>reOS</h2>
               <p>
+                <i>
+                  reOS makes your rental book work like magic, so you can do
+                  more of what you do best.
+                </i>
+              </p>
+              <p>
                 As a front-end developer at reOS I was responsible for building
                 new features, adding small enhancements and fixing bugs for the
                 customer facing React app.
@@ -48,7 +54,7 @@
               >
             </div>
           </section>
-  
+
           <section>
             <div>
               <img src="./assets/gameslot-thumb.svg" alt="Gameslot Thumb" />
@@ -56,8 +62,17 @@
             <div>
               <h2>Gameslot</h2>
               <p>
-                Gameslot a slot game built using React that pulls data from the
+                Is a slot game I built with the purpose of playing around with
+                API’s. It’s built using React and pulls data from the
                 <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>
+                using the fetch API. It creates an array of three arrays (a
+                tuple) each with a range of numbers, randomises the order and
+                maps each number to a pokemon from the PokeAPI listing response.
+                The app manages a wallet balance that can be used to fund a bet
+                on each spin and a winning spin allocates a multiple of the bet
+                back into the wallet. For the spin animation, I used CSS
+                keyframes and synced the timing animation with some other
+                functions that are responsible for updating the state.
               </p>
               <a
                 href="https://6343ddbbf42c3156b4b731db--taupe-cascaron-3227e2.netlify.app/"
@@ -67,14 +82,20 @@
               >
             </div>
           </section>
-  
+
           <section>
             <div>
               <img src="./assets/crypto-hunter.jpg" alt="Crypto Hunter" />
             </div>
             <div>
               <h2>Crypto Hunter</h2>
-              <p>Crypto Hunter is a game I built for my Introduction to Programming course I did in my first year at University. It is built in Javascript using p5.js</p>
+              <p>
+                Crypto Hunter is a game I built for my Introduction to
+                Programming course I did in my first year at University. It is
+                built in Javascript using p5.js. The game is a simple platform
+                game where the player has to collect coins and avoid the
+                obstacles and enemies.
+              </p>
               <a
                 href="https://6344400522aaca1db615f277--tangerine-mooncake-85c4ca.netlify.app/"
                 target="_blank"
@@ -90,7 +111,14 @@
             </div>
             <div>
               <h2>La Tierra</h2>
-              <p>La Tierra is made using React and Tailwind</p>
+              <p>
+                La Tierra Is a landing page I built for La Tierra using Next.js
+                and Tailwind CSS. It’s a static build at this point but handles
+                tab panes each with a product offering. The intention was to use
+                this project to learn Next.js as it grew into a more
+                sophisticated website. I integrated a Rive animation of a
+                Windmill using the Rive JavaScript runtime library.
+              </p>
               <a
                 href="https://latierraagave.vercel.app/"
                 target="_blank"

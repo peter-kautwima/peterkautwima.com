@@ -52,6 +52,11 @@
   nav .links a:hover { color:var(--bg); background:var(--acc); }
   nav .links a.cta { border:1px solid var(--line2); color:var(--ink); }
   nav .links a.cta:hover { border-color:var(--acc); background:var(--acc); color:var(--bg); }
+  @media (max-width:640px){
+    nav { padding:14px 20px; }
+    nav .links { flex-wrap:wrap; justify-content:flex-end; }
+    .hero .vid-note { display:none; }
+  }
 
   /* ---------- hero ---------- */
   .hero { position:relative; min-height:88vh; display:flex; flex-direction:column; justify-content:center;

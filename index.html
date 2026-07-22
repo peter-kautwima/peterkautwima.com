@@ -1,47 +1,460 @@
-<!DOCTYPE HTML>
-<!--
-	Aerial by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Peter Kautwima - Mathamagician Front-end Developer</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
-		<div id="wrapper">
-			<div id="bg"></div>
-			<div id="overlay"></div>
-			<div id="main">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peter Kautwima — ML/AI Engineer</title>
+<meta name="description" content="ML/AI engineer & full-stack developer in Cape Town. Genetic algorithms, cancer-detection deep learning, RAG pipelines, and 6+ years of production React/TypeScript.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://peterkautwima.com/">
+<meta property="og:title" content="Peter Kautwima — ML/AI Engineer">
+<meta property="og:description" content="ML/AI engineer & full-stack developer in Cape Town. Genetic algorithms, cancer-detection deep learning, RAG pipelines, and 6+ years of production React/TypeScript.">
+<meta property="og:image" content="https://peterkautwima.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Peter Kautwima — ML/AI Engineer">
+<meta name="twitter:description" content="ML/AI engineer & full-stack developer in Cape Town. Genetic algorithms, cancer-detection deep learning, RAG pipelines, and 6+ years of production React/TypeScript.">
+<meta name="twitter:image" content="https://peterkautwima.com/assets/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  :root {
+    --bg:#08080a; --panel:#0d0d10; --line:#1e1e24; --line2:#2a2a32;
+    --acc:#c6f24e; --acc-dim:#6a8228; --ind:#6b5cff;
+    --ink:#f4f4ee; --mut:#8a8a94; --mut2:#5a5a64;
+  }
+  body { background:var(--bg); color:var(--ink); font-family:'Space Grotesk',sans-serif; overflow-x:hidden; }
+  ::selection { background:var(--acc); color:var(--bg); }
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:99; opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-				<!-- Header -->
-					<header id="header">
-						<h1>Peter Kautwima</h1>
-						<p>Mathamagician - Front-end Developer</p>
-						<nav>
-							<ul>
-								<!-- <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li> -->
-								<!-- <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li> -->
-								<!-- <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li> -->
-								<li><a href="https://github.com/peter-kautwima" class="icon brands fa-github" title="Github"><span class="label">Github</span></a></li>
-								<li><a href="https://www.linkedin.com/in/peter-kautwima-371b3684/" class="icon brands fa-linkedin" title="LinkedIn"><span class="label">LinkedIn</span></a></li>
-								<li><a href="/projects.html" class="icon brands projects-icon" title="Projects"><span class="label">Projects</span></a></li>
-								<li><a href="/assets/peter-kautwima-cv-2026.pdf" target="_blank" class="icon brands cv-icon" title="CV"><span class="label">CV</span></a></li>
-								<!-- <li><a href="mailto:kautwima@gmail.com?subject=Hello!" class="icon solid fa-envelope"><span class="label">Email</span></a></li> -->
-							</ul>
-						</nav>
-					</header>
+  .mono { font-family:'JetBrains Mono',monospace; }
+  nav .mark, .hero h1, .marq-track, .sec-head h2, .stat .n, .card .thumb .ph, .foot-cta {
+    font-weight:400; font-synthesis:none; }
+  .reveal { opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity:1; transform:none; transition:none; }
+    .marq-track { animation:none !important; }
+  }
 
-			</div>
-		</div>
-		<script>
-			window.onload = function() { document.body.classList.remove('is-preload'); }
-			window.ontouchmove = function() { return false; }
-			window.onorientationchange = function() { document.body.scrollTop = 0; }
-		</script>
-	</body>
+  /* ---------- nav ---------- */
+  nav { position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
+    padding:16px 40px; border-bottom:1px solid var(--line); background:rgba(8,8,10,.8); backdrop-filter:blur(10px); }
+  nav .mark { font-family:'Archivo Black',sans-serif; font-size:17px; letter-spacing:-.02em; text-decoration:none; color:var(--ink); }
+  nav .mark span { color:var(--acc); }
+  nav .links { display:flex; gap:4px; align-items:center; }
+  nav .links a { font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:none; color:var(--mut);
+    padding:8px 13px; border-radius:999px; transition:.18s; }
+  nav .links a:hover { color:var(--bg); background:var(--acc); }
+  nav .links a.cta { border:1px solid var(--line2); color:var(--ink); }
+  nav .links a.cta:hover { border-color:var(--acc); background:var(--acc); color:var(--bg); }
+  @media (max-width:640px){
+    nav { padding:14px 20px; }
+    nav .links { flex-wrap:wrap; justify-content:flex-end; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero { position:relative; min-height:88vh; display:flex; flex-direction:column; justify-content:center;
+    padding:60px 40px 80px; overflow:hidden; }
+  #evo { position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+  .hero .wrap { position:relative; z-index:2; max-width:1200px; }
+  .hero .eyebrow { font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.3em; text-transform:uppercase; color:var(--acc); margin-bottom:16px; }
+  .hero h1 { font-family:'Archivo Black',sans-serif; font-size:clamp(54px,13vw,180px); line-height:.82; letter-spacing:-.04em; text-transform:uppercase; }
+  .hero h1 .out { color:transparent; -webkit-text-stroke:1.5px var(--ink); }
+  .hero .sub { display:flex; gap:28px; flex-wrap:wrap; margin-top:30px; font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--mut); }
+  .hero .sub b { color:var(--ink); font-weight:500; }
+  .hero .scrollhint { position:absolute; bottom:26px; left:40px; z-index:2; font-family:'JetBrains Mono',monospace;
+    font-size:11px; color:var(--mut2); letter-spacing:.2em; text-transform:uppercase; }
+
+  /* ---------- marquee ---------- */
+  .marq { border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding:13px 0; background:var(--panel); }
+  .marq-track { display:inline-block; white-space:nowrap; font-family:'Archivo Black',sans-serif; font-size:17px; text-transform:uppercase; animation:sc 26s linear infinite; }
+  .marq-track span { margin:0 20px; color:var(--mut); } .marq-track b { color:var(--acc); font-weight:400; }
+  @keyframes sc { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ---------- section scaffolding ---------- */
+  section { padding:90px 40px; max-width:1240px; margin:0 auto; }
+  .sec-head { display:flex; align-items:baseline; justify-content:space-between; border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:38px; flex-wrap:wrap; gap:10px; }
+  .sec-head h2 { font-family:'Archivo Black',sans-serif; font-size:clamp(30px,4.5vw,52px); text-transform:uppercase; letter-spacing:-.02em; }
+  .sec-head .idx { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mut); }
+
+  /* ---------- about ---------- */
+  .about-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:44px; align-items:start; }
+  @media (max-width:900px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-grid .lede { font-size:clamp(20px,2.6vw,30px); line-height:1.4; font-weight:500; }
+  .about-grid .lede em { font-style:normal; color:var(--acc); }
+  .about-grid .body { color:var(--mut); font-size:15px; line-height:1.75; margin-top:22px; max-width:560px; }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .stat { border:1px solid var(--line2); border-radius:14px; padding:20px; background:var(--panel); transition:.2s; }
+  .stat:hover { border-color:var(--acc); transform:translateY(-3px); }
+  .stat .n { font-family:'Archivo Black',sans-serif; font-size:34px; color:var(--acc); letter-spacing:-.02em; }
+  .stat .l { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut); margin-top:6px; line-height:1.5; }
+
+  /* ---------- work grid ---------- */
+  .work-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:16px; }
+  .card { border:1px solid var(--line2); border-radius:16px; background:var(--panel); overflow:hidden;
+    cursor:pointer; transition:transform .22s ease, border-color .22s ease; position:relative; display:flex; flex-direction:column; }
+  .card:hover { transform:translateY(-5px); border-color:var(--acc); }
+  .card .thumb { height:170px; position:relative; overflow:hidden; background:#0a0f08; border-bottom:1px solid var(--line); }
+  .card .thumb canvas { position:absolute; inset:0; width:100%; height:100%; }
+  .card .thumb .ph { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Archivo Black',sans-serif; font-size:44px; letter-spacing:-.03em; color:#1c2413; text-transform:uppercase; }
+  .card .body { padding:20px 22px 22px; display:flex; flex-direction:column; flex:1; }
+  .card .no { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut2); }
+  .card h3 { font-size:21px; font-weight:700; margin:8px 0 7px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .card p { font-size:13.5px; color:var(--mut); line-height:1.6; flex:1; }
+  .card .tags { margin-top:14px; display:flex; gap:6px; flex-wrap:wrap; }
+  .t { font-family:'JetBrains Mono',monospace; font-size:10px; padding:3.5px 9px; border-radius:999px;
+    color:var(--acc); border:1px solid #2b3510; background:#151a07; }
+  .t.ind { color:#b3a8ff; border-color:#2c2755; background:#131030; }
+  .flagbadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:var(--acc); color:var(--bg);
+    padding:2.5px 8px; border-radius:4px; letter-spacing:.12em; }
+  .honbadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:transparent; color:var(--mut);
+    border:1px dashed var(--line2); padding:2.5px 8px; border-radius:4px; letter-spacing:.08em; }
+  .card.c-flag { grid-column:span 4; }
+  .card.c-flag .thumb { height:260px; }
+  .card.c-half { grid-column:span 2; }
+  .card.c-third { grid-column:span 2; }
+  @media (max-width:900px){ .card.c-flag,.card.c-half,.card.c-third{ grid-column:span 6; } }
+
+  .group-label { grid-column:1/-1; font-family:'JetBrains Mono',monospace; font-size:11px;
+    letter-spacing:.24em; text-transform:uppercase; color:var(--mut2); margin-top:18px;
+    display:flex; align-items:center; gap:14px; }
+  .group-label::after { content:''; flex:1; height:1px; background:var(--line); }
+  .group-label:first-child { margin-top:0; }
+  .c-full { grid-column:span 6; }
+  .c-3 { grid-column:span 3; }
+  @media (max-width:900px){ .c-full,.c-3{ grid-column:span 6; } }
+  .yr { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mut2); margin-left:auto; }
+  .card .no { display:flex; gap:8px; align-items:baseline; }
+
+  /* ---------- labs ---------- */
+  .labs { background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .labs-inner { max-width:1240px; margin:0 auto; }
+  .labs .sec-head { border-color:var(--acc); }
+  .labs .sec-head h2 .thin { color:transparent; -webkit-text-stroke:1px var(--ink); }
+  .lab-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:900px){ .lab-row{ grid-template-columns:1fr; } }
+  .lab { border:1px solid var(--line2); border-radius:16px; padding:24px; background:var(--bg); transition:.2s; position:relative; }
+  .lab:hover { border-color:var(--ind); transform:translateY(-4px); }
+  .lab .icon { width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    background:#131030; border:1px solid #2c2755; margin-bottom:16px; font-size:20px; color:#b3a8ff; }
+  .lab h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+  .lab p { font-size:13.5px; color:var(--mut); line-height:1.65; }
+  .lab .status { font-family:'JetBrains Mono',monospace; font-size:10px; margin-top:16px; display:inline-block;
+    padding:4px 10px; border-radius:999px; letter-spacing:.08em; }
+  .lab .status.live { color:var(--acc); border:1px solid #2b3510; background:#151a07; }
+  .lab .status.soon { color:var(--mut); border:1px solid var(--line2); }
+  .lab.soon { opacity:.62; border-style:dashed; filter:saturate(.55); position:relative; overflow:hidden; }
+  .lab.soon:hover { transform:none; border-color:var(--line2); }
+  .lab.soon .stamp { position:absolute; top:18px; right:-38px; transform:rotate(35deg);
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; color:var(--bg);
+    background:var(--acc); padding:5px 44px; opacity:.9; }
+  .lab-toggle { margin-top:16px; margin-left:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
+    letter-spacing:.08em; padding:4px 12px; border-radius:999px; background:transparent;
+    color:#b3a8ff; border:1px solid #2c2755; cursor:pointer; }
+  .lab-toggle:hover { background:#131030; }
+  .lab-panel { margin-top:16px; border-top:1px solid var(--line2); padding-top:16px; }
+  .lab-panel[hidden] { display:none; }
+  .lab-panel p { margin-bottom:14px; }
+  .lab-panel .ctl { display:flex; align-items:center; gap:10px; margin:10px 0; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut); }
+  .lab-panel input[type=range] { flex:1; accent-color:#c6f24e; }
+  .lab-panel .v { color:var(--acc); min-width:34px; text-align:right; }
+
+  /* ---------- honesty strip ---------- */
+  .honesty { border:1px solid var(--line2); border-left:4px solid var(--acc); border-radius:0 16px 16px 0;
+    padding:26px 30px; background:var(--panel); max-width:1240px; margin:0 auto; }
+  .honesty h3 { font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--acc); margin-bottom:12px; }
+  .honesty p { color:var(--mut); font-size:14.5px; line-height:1.7; max-width:900px; }
+  .honesty p b { color:var(--ink); font-weight:500; }
+
+  /* ---------- footer ---------- */
+  footer { margin-top:90px; border-top:1px solid var(--line); padding:70px 40px 40px; }
+  .foot-inner { max-width:1240px; margin:0 auto; }
+  .foot-cta { font-family:'Archivo Black',sans-serif; font-size:clamp(36px,7vw,90px); line-height:.9;
+    text-transform:uppercase; letter-spacing:-.03em; margin-bottom:36px; }
+  .foot-cta a { color:var(--acc); text-decoration:none; }
+  .foot-cta a:hover { text-decoration:underline; text-decoration-thickness:6px; }
+  .foot-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+    border-top:1px solid var(--line); padding-top:26px; }
+  .foot-row .links { display:flex; gap:20px; }
+  .foot-row a { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mut); text-decoration:none; }
+  .foot-row a:hover { color:var(--acc); }
+  .foot-row .fine { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut2); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="mark" href="#">PK<span>.</span></a>
+  <div class="links">
+    <a href="#about">about</a><a href="#work">work</a><a href="#labs">labs</a>
+    <a href="https://github.com/peter-kautwima" target="_blank" rel="noopener" title="GitHub">github</a>
+    <a href="https://www.linkedin.com/in/peter-kautwima/" target="_blank" rel="noopener" title="LinkedIn">linkedin</a>
+    <a href="assets/peter-kautwima-cv-2026.pdf" target="_blank" rel="noopener" title="CV (PDF)">cv</a>
+    <a href="mailto:kautwima@gmail.com" class="cta">get in touch</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <canvas id="evo"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">ml/ai engineer · full-stack · cape town → the world</div>
+    <h1>Peter<br><span class="out">Kautwima</span></h1>
+    <div class="sub">
+      <span><b>Builds</b> systems that adapt &amp; learn</span>
+      <span><b>Stack</b> React · TypeScript · Python</span>
+      <span><b>Edu</b> BSc Hons ML/AI</span>
+    </div>
+  </div>
+  <div class="scrollhint">scroll ↓</div>
+</header>
+
+<div class="marq"><div class="marq-track">
+  <span>evolving creatures</span><b>◆</b><span>genetic algorithms</span><b>◆</b><span>cancer detection</span><b>◆</b><span>rag pipelines</span><b>◆</b><span>physics simulation</span><b>◆</b><span>react &amp; typescript</span><b>◆</b>
+  <span>evolving creatures</span><b>◆</b><span>genetic algorithms</span><b>◆</b><span>cancer detection</span><b>◆</b><span>rag pipelines</span><b>◆</b><span>physics simulation</span><b>◆</b><span>react &amp; typescript</span><b>◆</b>
+</div></div>
+
+<section id="about">
+  <div class="sec-head reveal"><h2>The short version</h2><span class="idx">01 / about</span></div>
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="lede">Full-stack engineer with an ML/AI honours degree, building things that <em>visibly work</em> — evolved creatures that climb, models you can watch think, interfaces that teach.</div>
+      <div class="body">Six-plus years shipping React/TypeScript in production — the last three delivering a multi-brand estate at a FTSE40 gaming company — now aimed at ML, research and simulation work. My rule for every project on this site: honest framing, reproducible results, and an interactive demo over a wall of claims. Every case study says plainly what it is and isn't — what I built, what was provided, and what the real numbers are. If a figure can't be regenerated from committed code and a seed, it doesn't get shown.</div>
+      <div class="mono" style="margin-top:22px; font-size:11px; color:var(--mut2); letter-spacing:.14em; text-transform:uppercase;">Credentials</div>
+      <div class="mono" style="margin-top:8px; font-size:12.5px; color:var(--mut); line-height:2;">
+        BSc Hons — Machine Learning &amp; AI, University of London (final exam · Sept 2026)<br>
+        Diploma — Web Development<br>
+        Diploma — Web Design<br>
+        Diploma — Financial Trading
+      </div>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><div class="n">6+</div><div class="l">years engineering in production</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">projects on this site — each with a live demo, live site, or honest writeup</div></div>
+      <div class="stat"><div class="n">0.77</div><div class="l">AUC on mammography coursework — and why that honest number beats a fake 0.99</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">mountain, being climbed by evolution as we speak</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="sec-head reveal"><h2>Selected work</h2><span class="idx">02 / eight projects · 2021–2026</span></div>
+  <div class="work-grid">
+
+    <div class="group-label reveal">production work</div>
+
+    <div class="card c-third reveal" data-href="https://www.meccabingo.com/jackpots">
+      <div class="thumb" style="background:#120c14"><div class="ph" style="color:#2c1c33">rank</div></div>
+      <div class="body">
+        <div class="no">01 / employer project <span class="yr">2025</span></div>
+        <h3>Jackpot Carousel @ Rank</h3>
+        <p>A real-time jackpot carousel live on Mecca Bingo and Grosvenor Casino: a Cloudflare Worker polls and caches jackpot values from multiple providers, and a Remix service layer streams them into smoothly animated UI. Multi-provider normalisation, polling architecture and cache invalidation under production traffic — the code stays with the employer; the live site speaks for itself.</p>
+        <div class="tags"><span class="t ind">react</span><span class="t ind">typescript</span><span class="t ind">remix</span><span class="t ind">storybook</span><span class="t ind">cloudflare workers</span></div>
+      </div>
+    </div>
+
+    <div class="card c-third reveal" data-href="https://www.reos.co.za/">
+      <div class="thumb" style="background:#0c0c0c"><div class="ph" style="color:#222">reos</div></div>
+      <div class="body">
+        <div class="no">02 / employer project <span class="yr">2021–2022</span></div>
+        <h3>reOS</h3>
+        <p>Front-end engineer on a customer-facing rental-management platform — built the support team's payment-reconciliation tool, user invitations and role permissions, file management and dashboard stats. Joined as an intern; full-time junior four months later.</p>
+        <div class="tags"><span class="t ind">react</span><span class="t ind">typescript</span><span class="t ind">redux</span></div>
+      </div>
+    </div>
+
+    <div class="card c-third reveal" data-href="https://latierraagave.vercel.app/">
+      <div class="thumb" style="background:#12100a"><div class="ph" style="color:#2e2816">la tierra</div></div>
+      <div class="body">
+        <div class="no">03 / client work <span class="yr">2022</span></div>
+        <h3>La Tierra</h3>
+        <p>Client site for an agave brand — Next.js + Tailwind with tabbed product offerings and a Rive-animated windmill running on the Rive JS runtime. The project where I properly learned Next.js.</p>
+        <div class="tags"><span class="t ind">next.js</span><span class="t ind">tailwind</span><span class="t ind">rive</span></div>
+      </div>
+    </div>
+
+    <div class="group-label reveal">research &amp; ml</div>
+
+    <div class="card c-full reveal" data-href="https://github.com/peter-kautwima/evolving-creatures-genetic-algorithm">
+      <div class="thumb" style="height:240px"><div class="ph">climb</div><canvas id="mini-evo"></canvas></div>
+      <div class="body">
+        <div class="no">04 / flagship · simulation + evolutionary computation <span class="yr">2024 · rebuilt 2026</span></div>
+        <h3>Evolving Climbers <span class="flagbadge">FLAGSHIP</span></h3>
+        <p>A genetic algorithm evolving 3D creatures in a PyBullet physics sim to climb a mountain — selection, crossover, mutation, honest fitness design that catches its own reward hacks, and an interactive explainer where you can step through evolution yourself. GA, not RL — and the writeup explains exactly why that distinction matters.</p>
+        <div class="tags"><span class="t">python</span><span class="t">pybullet</span><span class="t">genetic algorithm</span><span class="t">interactive explainer</span></div>
+      </div>
+    </div>
+
+    <div class="card c-3 reveal" data-href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification">
+      <div class="thumb" style="background:#0d0a14"><div class="ph" style="color:#241a35">scan</div></div>
+      <div class="body">
+        <div class="no">05 / deep learning · coursework <span class="honbadge">UNIVERSITY PROJECT</span> <span class="yr">2026</span></div>
+        <h3>Breast Cancer Detection</h3>
+        <p>A four-stage pipeline — baseline CNN → frozen VGG16 → regularisation → fine-tuning — on CBIS-DDSM mammography, with Grad-CAM heatmaps showing where the model looks, including on the cases it gets wrong. Honest headline: AUC 0.77 on 714 held-out scans — above the published mean-radiologist benchmark, below clinical grade, and the case study says so up front.</p>
+        <div class="tags"><span class="t">tensorflow</span><span class="t">cnn</span><span class="t">grad-cam</span></div>
+      </div>
+    </div>
+
+    <div class="card c-3 reveal" data-href="https://rag-document-pipeline-vercel-h1e4.vercel.app/">
+      <div class="thumb" style="background:#0a0d12"><div class="ph" style="color:#16222e">rag</div></div>
+      <div class="body">
+        <div class="no">06 / applied llm <span class="yr">2026</span></div>
+        <h3>Document Q&amp;A (RAG)</h3>
+        <p>Retrieval-augmented pipeline: chunking, local sentence-transformer embeddings, cosine search, and grounded answers citing their source chunks — plus a similarity guardrail that says "no relevant content" instead of hallucinating. FastAPI backend, React + TypeScript front end, 61 tests and an evaluation harness grading retrieval quality.</p>
+        <div class="tags"><span class="t">python</span><span class="t">embeddings</span><span class="t">fastapi</span><span class="t ind">react</span><span class="t ind">typescript</span></div>
+      </div>
+    </div>
+
+    <div class="group-label reveal">play</div>
+
+    <div class="card c-3 reveal" data-href="https://gameslot.peterkautwima.com">
+      <div class="thumb" style="background:#120a0a"><div class="ph" style="color:#2e1616">spin</div></div>
+      <div class="body">
+        <div class="no">07 / play <span class="yr">2022</span></div>
+        <h3>Gameslot</h3>
+        <p>A slot game wired to live PokéAPI data — three reels, a wallet that stakes each spin and pays out multiples on a win, and CSS-keyframe reel animation synced to state updates. Small, complete, and fun.</p>
+        <div class="tags"><span class="t ind">react</span><span class="t ind">rest api</span></div>
+      </div>
+    </div>
+
+    <div class="card c-3 reveal" data-href="https://crypto-hunter.peterkautwima.com">
+      <div class="thumb" style="background:#0a1208"><div class="ph" style="color:#1a2e14">hunt</div></div>
+      <div class="body">
+        <div class="no">08 / origin story <span class="yr">2022 · rebuild in progress</span></div>
+        <h3>Crypto Hunter</h3>
+        <p>A p5.js platformer from first-year programming — collect the coins, dodge the enemies — the first code I ever shipped. Kept here deliberately: an AI-assisted rebuild is underway, and the before/after will live side by side.</p>
+        <div class="tags"><span class="t ind">p5.js</span><span class="t ind">javascript</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="labs" id="labs">
+  <section style="padding-top:80px; padding-bottom:80px;">
+    <div class="labs-inner">
+      <div class="sec-head reveal"><h2>Labs <span class="thin">/ live experiments</span></h2><span class="idx">03 / poke the work</span></div>
+      <div class="lab-row">
+        <div class="lab soon reveal">
+          <div class="stamp">COMING SOON</div>
+          <div class="icon">⛰</div>
+          <h3>Evolution, step by step</h3>
+          <p>Step through a real GA generation by generation — selection, crossover, mutation, elitism — and watch the fitness distribution shift on real experiment data. Drag the mutation-rate slider and feel exploration vs exploitation.</p>
+          <span class="status soon">SHIPS WITH EVOLVING CLIMBERS</span>
+        </div>
+        <div class="lab soon reveal">
+          <div class="stamp">COMING SOON</div>
+          <div class="icon">◉</div>
+          <h3>Where the model looks</h3>
+          <p>A Grad-CAM explorer over held-out mammograms: pick a scan, see the prediction, confidence, and the exact regions that drove it — including the cases the model got wrong, on purpose.</p>
+          <span class="status soon">SHIPS WITH CANCER DETECTION</span>
+        </div>
+        <div class="lab reveal">
+          <div class="icon">✦</div>
+          <h3>This hero, explained</h3>
+          <p>The particle system on the front page is a live flocking sim that reacts to your cursor. A short interactive note on how it works — and how it hands off to the real evolution footage.</p>
+          <span class="status live">LIVE ON THIS PAGE</span><button class="lab-toggle" id="lab-toggle">open the dials →</button>
+          <div class="lab-panel" id="lab-panel" hidden>
+            <p>Each dot is an agent with a velocity. Every frame: your cursor repels agents inside the repel radius, velocities decay (friction), and any two agents closer than the link distance get a line whose opacity falls with distance. That's it — the "organism" look is pure emergence. Drag the dials and watch the hero change behaviour live:</p>
+            <div class="ctl"><span>repel radius</span><input type="range" id="ctl-repel" min="40" max="400" step="1" value="170"><span class="v" id="v-repel">170</span></div>
+            <div class="ctl"><span>link distance</span><input type="range" id="ctl-link" min="40" max="200" step="1" value="105"><span class="v" id="v-link">105</span></div>
+            <p style="margin-top:12px; font-size:12px; color:var(--mut2);">In the full build this hands off to real evolution footage — same idea, but the agents are evolved creature genomes in a physics sim.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer id="contact">
+  <div class="foot-inner">
+    <div class="foot-cta reveal">Let's build something<br>that <a href="mailto:kautwima@gmail.com">adapts.</a></div>
+    <div class="foot-row">
+      <div class="links">
+        <a href="https://github.com/peter-kautwima" target="_blank" rel="noopener">github</a>
+        <a href="https://www.linkedin.com/in/peter-kautwima/" target="_blank" rel="noopener">linkedin</a>
+        <a href="assets/peter-kautwima-cv-2026.pdf" target="_blank" rel="noopener">cv.pdf</a>
+        <a href="mailto:kautwima@gmail.com">email</a>
+      </div>
+      <div class="fine">© 2026 Peter Kautwima · designed &amp; built in Cape Town</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- hero flock ----------
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const c = document.getElementById('evo'); const x = c.getContext('2d');
+  let W,H,P=[], mouse={x:-999,y:-999};
+  const HERO={repel:170, link:105};
+  function rs(){ const r=c.getBoundingClientRect(); W=c.width=r.width; H=c.height=r.height; }
+  function initHero(){ rs(); P=Array.from({length:110},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7})); }
+  c.parentElement.addEventListener('mousemove',e=>{ const r=c.getBoundingClientRect(); mouse.x=e.clientX-r.left; mouse.y=e.clientY-r.top; });
+  c.parentElement.addEventListener('mouseleave',()=>{ mouse.x=-999; mouse.y=-999; });
+  function loopHero(){
+    x.clearRect(0,0,W,H);
+    for(const p of P){
+      const dx=mouse.x-p.x, dy=mouse.y-p.y, d=Math.hypot(dx,dy)||1;
+      if(d<HERO.repel){ p.vx-=dx/d*.32; p.vy-=dy/d*.32; }
+      p.vx*=.985; p.vy*=.985; p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+      p.x=Math.max(0,Math.min(W,p.x)); p.y=Math.max(0,Math.min(H,p.y));
+    }
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+      const a=P[i],b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<HERO.link){ x.strokeStyle='rgba(198,242,78,'+((1-d/HERO.link)*.38)+')'; x.lineWidth=.5;
+        x.beginPath(); x.moveTo(a.x,a.y); x.lineTo(b.x,b.y); x.stroke(); }
+    }
+    for(const p of P){ x.fillStyle='rgba(198,242,78,.85)'; x.beginPath(); x.arc(p.x,p.y,1.5,0,7); x.fill(); }
+    requestAnimationFrame(loopHero);
+  }
+  window.addEventListener('resize',rs);
+  initHero(); if(!reduced) loopHero(); else { // static frame for reduced motion
+    for(const p of P){ x.fillStyle='rgba(198,242,78,.6)'; x.beginPath(); x.arc(p.x,p.y,1.5,0,7); x.fill(); }
+  }
+
+  // ---------- flagship mini-sim: dots "climb" a slope ----------
+  const mc = document.getElementById('mini-evo'); const mx = mc.getContext('2d');
+  let MW,MH,climbers=[];
+  function mrs(){ const r=mc.getBoundingClientRect(); MW=mc.width=r.width; MH=mc.height=r.height; }
+  function peakY(px){ const cx=MW*0.62, spread=MW*0.34; const h=MH*0.72;
+    return MH - h*Math.exp(-((px-cx)*(px-cx))/(2*spread*spread/3)); }
+  function initMini(){ mrs(); climbers=Array.from({length:26},(_,i)=>({x:Math.random()*MW*0.25, sp:.25+Math.random()*.55, wob:Math.random()*7})); }
+  function loopMini(t){
+    mx.clearRect(0,0,MW,MH);
+    mx.strokeStyle='#2b3510'; mx.lineWidth=1.5; mx.beginPath();
+    for(let px=0;px<=MW;px+=6){ const y=peakY(px); px===0?mx.moveTo(px,y):mx.lineTo(px,y); }
+    mx.stroke();
+    for(const cl of climbers){
+      cl.x+=cl.sp; if(cl.x>MW+10){ cl.x=-10; }
+      const y=peakY(cl.x)-4+Math.sin(t/220+cl.wob)*2.2;
+      mx.fillStyle='rgba(198,242,78,.9)'; mx.beginPath(); mx.arc(cl.x,y,2.1,0,7); mx.fill();
+    }
+    requestAnimationFrame(loopMini);
+  }
+  initMini(); if(!reduced) requestAnimationFrame(loopMini);
+  window.addEventListener('resize',()=>{ mrs(); });
+
+  // ---------- scroll reveals ----------
+  const io = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  // labs: hero-explained panel + live dials
+  const lt=document.getElementById('lab-toggle'), lp=document.getElementById('lab-panel');
+  if(lt&&lp){ lt.addEventListener('click',e=>{ e.stopPropagation(); lp.hidden=!lp.hidden;
+    lt.textContent=lp.hidden?'open the dials →':'close ↑'; }); }
+  const wire=(id,vid,key)=>{ const el=document.getElementById(id), v=document.getElementById(vid);
+    if(el){ el.addEventListener('input',()=>{ HERO[key]=+el.value; v.textContent=el.value; }); } };
+  wire('ctl-repel','v-repel','repel'); wire('ctl-link','v-link','link');
+
+  // card links
+  document.querySelectorAll('.card[data-href]').forEach(el=>{
+    el.addEventListener('click',()=>window.open(el.dataset.href,'_blank','noopener'));
+  });
+</script>
+</body>
 </html>

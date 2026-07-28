@@ -13,10 +13,19 @@ front-end skill to a hiring manager) and a showcase for my ML/AI + engineering w
 
 ## Current state — Phase 1 (shipped July 2026)
 
-The revamp runs in two phases. **Phase 1 (this repo, now):** a single-file static site —
-`index.html` at the repo root holds the entire page (inline CSS/JS), built from the
-locked design file `portfolio-homepage-prototype.html`. **Phase 2 (planned):** the
-Next.js + TypeScript + Tailwind + MDX rebuild described in the rest of this document.
+The revamp runs in two phases. **Phase 1 (this repo, now):** a static site with no build
+step. `index.html` at the repo root is the home page (inline CSS/JS), built from the locked
+design file `portfolio-homepage-prototype.html`. Case studies live under `work/`, one
+self-contained page each — the first is `work/evolving-climbers/`. **Phase 2 (planned):**
+the Next.js + TypeScript + Tailwind + MDX rebuild described in the rest of this document.
+
+**Testing locally:** case-study links point at folders (`work/<slug>/`) to keep public URLs
+clean, and resolving a folder to its `index.html` is a web-server behaviour. So opening
+`index.html` from disk will not navigate to case studies — `file://` has no server to apply
+that rule. **Double-click `preview.command`** (starts a local server and opens the browser),
+or run `python3 -m http.server 8000`. The Netlify deploy preview on each PR is the other
+check. Individual case-study files open fine on their own; only inter-page links need the
+server.
 
 Deployment facts (verified, not what older notes assumed): the site deploys on
 **Netlify** — project `peterkautwima`, production branch **`master`**, publish directory
@@ -143,10 +152,12 @@ Phase 1 (current, static):
 
 | Path | Purpose |
 |---|---|
-| `index.html` | The entire site — single-file page, inline CSS/JS |
+| `index.html` | Home page — single file, inline CSS/JS |
+| `work/<slug>/index.html` | One self-contained case study per folder (see below) |
 | `assets/peter-kautwima-cv-2026.pdf` | CV, linked from nav and footer |
 | `assets/favicon.svg` | "PK" favicon, site colours |
 | `assets/og-image.png` | 1200×630 Open Graph / Twitter card image |
+| `preview.command` | Double-click to run the site locally (macOS) |
 | `robots.txt` | Allow-all |
 | `CLAUDE.md` · `README.md` | Working rules (this file) · public repo front |
 | `.claude/settings.json` | Claude Code harness settings (no co-author trailer) |
@@ -177,12 +188,23 @@ agreed tree as locked.
 
 ## Relationship to the evolving-climbers repo
 
-The creatures sim + its interactive explainer live in their own repo and are built
-first, decoupled and data-driven (all logic reads from a results JSON). When that's
-ready, its explainer components port into `src/components/demos/` here and render as
-the Evolving Climbers case study. This portfolio depends on that project's OUTPUT; it
-doesn't reimplement the simulation. Don't block the portfolio on it — the case study
-can ship with the video + graphs first and gain the live explainer when it's ready.
+The creatures sim + its interactive explainer live in their own repo, decoupled and
+data-driven (all logic reads from a results JSON). This portfolio depends on that project's
+OUTPUT; it never reimplements the simulation.
+
+**Shipped (Phase 0, July 2026):** the generated explainer is **copied** — never moved — into
+`work/evolving-climbers/index.html` and served as a case-study route. It is fully
+self-contained (experiment data and video inlined as base64), so it needs nothing else from
+this repo.
+
+The source repo stays the master. To refresh: regenerate there via
+`explainer/build_data.py`, copy the file across, and re-apply the three portfolio-only
+edits, which are listed in README.md — a home link back to the site, route metadata, and a
+mobile overflow fix. Keep that list in README.md current; if the divergence grows past a
+handful of edits, script it rather than re-applying by hand.
+
+When Phase 2 lands, this route becomes React components under `src/components/demos/`
+reading the same data. Until then the copied file IS the case study.
 
 ## Reference docs — when to read what
 

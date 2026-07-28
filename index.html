@@ -154,6 +154,16 @@
   .lab.soon .stamp { position:absolute; top:18px; right:-38px; transform:rotate(35deg);
     font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; color:var(--bg);
     background:var(--acc); padding:5px 44px; opacity:.9; }
+  .livebadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:var(--ind); color:#fff;
+    padding:2.5px 8px; border-radius:4px; letter-spacing:.12em; }
+  a.lab { display:block; text-decoration:none; color:inherit; }
+  a.lab:hover { border-color:var(--ind); transform:translateY(-4px); }
+  a.lab:focus-visible { outline:2px solid var(--acc); outline-offset:3px; }
+  .lab .go { font-family:'JetBrains Mono',monospace; font-size:10px; margin-top:16px;
+    display:inline-block; padding:4px 10px; border-radius:999px; letter-spacing:.08em;
+    color:#b3a8ff; border:1px solid #2c2755; background:#131030; }
+  a.lab:hover .go { background:var(--ind); border-color:var(--ind); color:#fff; }
+  .lab-row { grid-auto-rows:1fr; }
   .lab-toggle { margin-top:16px; margin-left:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
     letter-spacing:.08em; padding:4px 12px; border-radius:999px; background:transparent;
     color:#b3a8ff; border:1px solid #2c2755; cursor:pointer; }
@@ -280,11 +290,11 @@
 
     <div class="group-label reveal">research &amp; ml</div>
 
-    <div class="card c-full reveal" data-href="https://github.com/peter-kautwima/evolving-creatures-genetic-algorithm">
+    <div class="card c-full reveal" data-href="work/evolving-climbers/">
       <div class="thumb" style="height:240px"><div class="ph">climb</div><canvas id="mini-evo"></canvas></div>
       <div class="body">
         <div class="no">04 / flagship · simulation + evolutionary computation <span class="yr">2024 · rebuilt 2026</span></div>
-        <h3>Evolving Climbers <span class="flagbadge">FLAGSHIP</span></h3>
+        <h3>Evolving Climbers <span class="flagbadge">FLAGSHIP</span> <span class="livebadge">CASE STUDY</span></h3>
         <p>A genetic algorithm evolving 3D creatures in a PyBullet physics sim to climb a mountain — selection, crossover, mutation, honest fitness design that catches its own reward hacks, and an interactive explainer where you can step through evolution yourself. GA, not RL — and the writeup explains exactly why that distinction matters.</p>
         <div class="tags"><span class="t">python</span><span class="t">pybullet</span><span class="t">genetic algorithm</span><span class="t">interactive explainer</span></div>
       </div>
@@ -340,13 +350,19 @@
     <div class="labs-inner">
       <div class="sec-head reveal"><h2>Labs <span class="thin">/ live experiments</span></h2><span class="idx">03 / poke the work</span></div>
       <div class="lab-row">
-        <div class="lab soon reveal">
-          <div class="stamp">COMING SOON</div>
+        <a class="lab reveal" href="work/evolving-climbers/#loop">
           <div class="icon">⛰</div>
           <h3>Evolution, step by step</h3>
-          <p>Step through a real GA generation by generation — selection, crossover, mutation, elitism — and watch the fitness distribution shift on real experiment data. Drag the mutation-rate slider and feel exploration vs exploitation.</p>
-          <span class="status soon">SHIPS WITH EVOLVING CLIMBERS</span>
-        </div>
+          <p>Step through a real genetic algorithm one generation at a time — selection, crossover, mutation, elitism — and watch the fitness distribution shift on actual seeded experiment data.</p>
+          <span class="status live">LIVE</span><span class="go">open the stepper →</span>
+        </a>
+        <a class="lab reveal" href="work/evolving-climbers/#settings">
+          <div class="icon">🎛</div>
+          <h3>Turn the GA's dials</h3>
+          <p>Population size and mutation rate, swept across real runs. Switch between them and watch the curves redraw — the exploration-versus-exploitation tradeoff, on measured data rather than a diagram.</p>
+          <span class="status live">LIVE</span><span class="go">see the sweeps →</span>
+        </a>
+
         <div class="lab soon reveal">
           <div class="stamp">COMING SOON</div>
           <div class="icon">◉</div>
@@ -453,7 +469,11 @@
 
   // card links
   document.querySelectorAll('.card[data-href]').forEach(el=>{
-    el.addEventListener('click',()=>window.open(el.dataset.href,'_blank','noopener'));
+    const go=()=>{ const h=el.dataset.href;
+      // internal routes navigate in place; external ones open in a new tab
+      if(/^https?:/i.test(h)) window.open(h,'_blank','noopener'); else location.href=h;
+    };
+    el.addEventListener('click',go);
   });
 </script>
 </body>

@@ -182,6 +182,8 @@
   .lab-wide { grid-column:1/-1; margin-top:4px; }
   .lab .dest { display:block; margin-top:10px; font-family:'JetBrains Mono',monospace;
     font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut2); }
+  .card .thumb img { position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; display:block; }
   .livebadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:var(--ind); color:#fff;
     padding:2.5px 8px; border-radius:4px; letter-spacing:.12em; }
   a.lab { display:block; text-decoration:none; color:inherit; }
@@ -312,7 +314,7 @@
     <div class="group-label reveal">production work</div>
 
     <div class="card c-third reveal">
-      <div class="thumb" style="background:#120c14"><div class="ph" style="color:#2c1c33">rank</div></div>
+      <div class="thumb"><img src="assets/img/tiles/rank.webp" alt="" width="748" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">01 / employer project <span class="yr">2025</span></div>
         <h3><a class="ct" href="https://www.meccabingo.com/jackpots" target="_blank" rel="noopener">Jackpot Carousel @ Rank</a></h3>
@@ -323,7 +325,7 @@
     </div>
 
     <div class="card c-third reveal">
-      <div class="thumb" style="background:#0c0c0c"><div class="ph" style="color:#222">reos</div></div>
+      <div class="thumb"><img src="assets/img/tiles/reos.webp" alt="" width="748" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">02 / employer project <span class="yr">2021–2022</span></div>
         <h3><a class="ct" href="https://www.reos.co.za/" target="_blank" rel="noopener">reOS</a></h3>
@@ -334,7 +336,7 @@
     </div>
 
     <div class="card c-third reveal">
-      <div class="thumb" style="background:#12100a"><div class="ph" style="color:#2e2816">la tierra</div></div>
+      <div class="thumb"><img src="assets/img/tiles/latierra.webp" alt="" width="748" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">03 / client work <span class="yr">2022</span></div>
         <h3><a class="ct" href="https://latierraagave.vercel.app/" target="_blank" rel="noopener">La Tierra</a></h3>
@@ -347,7 +349,7 @@
     <div class="group-label reveal">research &amp; ml</div>
 
     <div class="card c-full reveal">
-      <div class="thumb" style="height:240px"><div class="ph">climb</div><canvas id="mini-evo"></canvas></div>
+      <div class="thumb" style="height:240px"><canvas id="mini-evo"></canvas></div>
       <div class="body">
         <div class="no">04 / flagship · simulation + evolutionary computation <span class="yr">2024 · rebuilt 2026</span></div>
         <h3><a class="ct" href="work/evolving-climbers/">Evolving Climbers <span class="flagbadge">FLAGSHIP</span> <span class="livebadge">CASE STUDY</span></a></h3>
@@ -358,7 +360,7 @@
     </div>
 
     <div class="card c-3 reveal">
-      <div class="thumb" style="background:#0d0a14"><div class="ph" style="color:#241a35">scan</div></div>
+      <div class="thumb"><img src="assets/img/tiles/cancer.webp" alt="" width="1140" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">05 / deep learning · coursework <span class="honbadge">UNIVERSITY PROJECT</span> <span class="yr">2026</span></div>
         <h3><a class="ct" href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification" target="_blank" rel="noopener">Breast Cancer Detection</a></h3>
@@ -369,7 +371,7 @@
     </div>
 
     <div class="card c-3 reveal">
-      <div class="thumb" style="background:#0a0d12"><div class="ph" style="color:#16222e">rag</div></div>
+      <div class="thumb"><img src="assets/img/tiles/rag.webp" alt="" width="1140" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">06 / applied llm <span class="yr">2026</span></div>
         <h3><a class="ct" href="https://rag-document-pipeline-vercel-h1e4.vercel.app/" target="_blank" rel="noopener">Document Q&amp;A (RAG)</a></h3>
@@ -382,7 +384,7 @@
     <div class="group-label reveal">play</div>
 
     <div class="card c-3 reveal">
-      <div class="thumb" style="background:#120a0a"><div class="ph" style="color:#2e1616">spin</div></div>
+      <div class="thumb"><img src="assets/img/tiles/gameslot.webp" alt="" width="1140" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">07 / play <span class="yr">2022</span></div>
         <h3><a class="ct" href="https://gameslot.peterkautwima.com" target="_blank" rel="noopener">Gameslot</a></h3>
@@ -393,7 +395,7 @@
     </div>
 
     <div class="card c-3 reveal">
-      <div class="thumb" style="background:#0a1208"><div class="ph" style="color:#1a2e14">hunt</div></div>
+      <div class="thumb"><img src="assets/img/tiles/cryptohunter.webp" alt="" width="1140" height="340" loading="lazy" decoding="async"></div>
       <div class="body">
         <div class="no">08 / origin story <span class="yr">2022 · rebuild in progress</span></div>
         <h3><a class="ct" href="https://crypto-hunter.peterkautwima.com" target="_blank" rel="noopener">Crypto Hunter</a></h3>
@@ -497,27 +499,113 @@
     for(const p of P){ x.fillStyle='rgba(198,242,78,.6)'; x.beginPath(); x.arc(p.x,p.y,1.5,0,7); x.fill(); }
   }
 
-  // ---------- flagship mini-sim: dots "climb" a slope ----------
+  // ---------- flagship sim: a GA climbing the mountain ----------
+  // Generative rather than a video still: the card is 4.83:1 on desktop and 1.28:1 on a
+  // phone, so any bitmap gets cropped badly at one end. This redraws to whatever shape it
+  // is given. It mirrors the real run — a population attempts the climb, the best distance
+  // carries forward (elitism), and each generation starts from a better mark.
   const mc = document.getElementById('mini-evo'); const mx = mc.getContext('2d');
-  let MW,MH,climbers=[];
-  function mrs(){ const r=mc.getBoundingClientRect(); MW=mc.width=r.width; MH=mc.height=r.height; }
-  function peakY(px){ const cx=MW*0.62, spread=MW*0.34; const h=MH*0.72;
-    return MH - h*Math.exp(-((px-cx)*(px-cx))/(2*spread*spread/3)); }
-  function initMini(){ mrs(); climbers=Array.from({length:26},(_,i)=>({x:Math.random()*MW*0.25, sp:.25+Math.random()*.55, wob:Math.random()*7})); }
+  let MW, MH, pop = [], ghosts = [], best = 0, gen = 0;
+  const N = 14;
+
+  function mrs(){ const r = mc.getBoundingClientRect();
+    const d = window.devicePixelRatio || 1;
+    MW = r.width; MH = r.height;
+    mc.width = Math.round(MW*d); mc.height = Math.round(MH*d);
+    mx.setTransform(d,0,0,d,0,0); }
+
+  // the arena's mound: a broad dome with a little surface roughness
+  function peakY(px){
+    const cx = MW*0.60, spread = MW*0.34, h = MH*0.66;
+    const dome = MH - h*Math.exp(-Math.pow((px-cx)/spread,2)*1.5);
+    return dome + Math.sin(px*0.055)*1.6 + Math.sin(px*0.13)*0.9;
+  }
+
+  function spawn(i){
+    // fitter genomes each generation — the population creeps up the slope
+    const reach = Math.min(0.96, 0.30 + gen*0.055 + Math.random()*0.16);
+    return { x:-6 - Math.random()*MW*0.035, sp:0.95+Math.random()*1.25,
+             stop:MW*reach, ph:Math.random()*7, gait:0.10+Math.random()*0.09,
+             elite:false };
+  }
+  function initMini(){ mrs(); gen=0; best=0; ghosts=[];
+    pop = Array.from({length:N}, (_,i)=>spawn(i)); }
+
+  function creature(x, y, t, c, a, elite){
+    const legs = elite ? 4 : 3, r = elite ? 5.2 : 3.8;
+    mx.strokeStyle = c; mx.globalAlpha = a; mx.lineWidth = elite ? 1.7 : 1.2;
+    mx.beginPath();
+    for (let i=0;i<legs;i++){
+      const ang = (i/legs)*Math.PI*2 + Math.sin(t)*0.5;
+      mx.moveTo(x,y); mx.lineTo(x+Math.cos(ang)*r, y+Math.sin(ang)*r*0.8);
+    }
+    mx.stroke();
+    mx.fillStyle = c; mx.beginPath(); mx.arc(x,y,elite?2.4:1.6,0,7); mx.fill();
+    mx.globalAlpha = 1;
+  }
+
   function loopMini(t){
     mx.clearRect(0,0,MW,MH);
-    mx.strokeStyle='#2b3510'; mx.lineWidth=1.5; mx.beginPath();
-    for(let px=0;px<=MW;px+=6){ const y=peakY(px); px===0?mx.moveTo(px,y):mx.lineTo(px,y); }
-    mx.stroke();
-    for(const cl of climbers){
-      cl.x+=cl.sp; if(cl.x>MW+10){ cl.x=-10; }
-      const y=peakY(cl.x)-4+Math.sin(t/220+cl.wob)*2.2;
-      mx.fillStyle='rgba(198,242,78,.9)'; mx.beginPath(); mx.arc(cl.x,y,2.1,0,7); mx.fill();
+
+    // mountain silhouette
+    mx.beginPath(); mx.moveTo(0,MH);
+    for (let px=0; px<=MW; px+=4) mx.lineTo(px, peakY(px));
+    mx.lineTo(MW,MH); mx.closePath();
+    mx.fillStyle='rgba(198,242,78,.045)'; mx.fill();
+    mx.strokeStyle='#2b3510'; mx.lineWidth=1.4; mx.stroke();
+
+    // how far each previous generation got — the population's high-water marks
+    ghosts.forEach((g,i)=>{
+      const gy = peakY(g.x);
+      mx.strokeStyle='rgba(198,242,78,'+(0.16 + i*0.035)+')'; mx.lineWidth=1.2;
+      mx.beginPath(); mx.moveTo(g.x, gy); mx.lineTo(g.x, gy+Math.min(14, MH*0.09)); mx.stroke();
+    });
+    if (ghosts.length>10) ghosts.splice(0, ghosts.length-10);
+
+    // best mark reached so far — elitism, carried between generations
+    if (best>0){
+      const by = peakY(best);
+      mx.setLineDash([3,4]); mx.strokeStyle='rgba(198,242,78,.30)'; mx.lineWidth=1;
+      mx.beginPath(); mx.moveTo(best,by); mx.lineTo(best,MH); mx.stroke(); mx.setLineDash([]);
+    }
+
+    let leader = null;
+    for (const c of pop){
+      if (c.x < c.stop) c.x += c.sp;
+      const y = peakY(c.x) - 5 + Math.sin(t*c.gait*0.01 + c.ph)*1.8;
+      if (!leader || c.x > leader.x) leader = c;
+    }
+    if (leader) leader.elite = true;
+
+    for (const c of pop){
+      const y = peakY(c.x) - 5 + Math.sin(t*c.gait*0.01 + c.ph)*1.8;
+      creature(c.x, y, t*0.004 + c.ph, c===leader ? '#c6f24e' : 'rgba(198,242,78,.55)',
+               c===leader ? 1 : 0.75, c===leader);
+      if (c===leader && c.x > best) best = c.x;
+    }
+
+    // when the population has settled, breed the next generation
+    if (pop.every(c => c.x >= c.stop - 0.5)){
+      gen++;
+      let far = 0; for (const c of pop) if (c.x > far) far = c.x;
+      ghosts.push({x: far});
+      pop = Array.from({length:N}, (_,i)=>spawn(i));
+      if (gen > 12){ gen = 0; best = 0; ghosts = []; }
     }
     requestAnimationFrame(loopMini);
   }
-  initMini(); if(!reduced) requestAnimationFrame(loopMini);
-  window.addEventListener('resize',()=>{ mrs(); });
+
+  initMini();
+  if (!reduced) requestAnimationFrame(loopMini);
+  else { // one static frame for reduced-motion
+    mx.beginPath(); mx.moveTo(0,MH);
+    for (let px=0; px<=MW; px+=4) mx.lineTo(px, peakY(px));
+    mx.lineTo(MW,MH); mx.closePath();
+    mx.fillStyle='rgba(198,242,78,.045)'; mx.fill();
+    mx.strokeStyle='#2b3510'; mx.lineWidth=1.4; mx.stroke();
+    pop.forEach((c,i)=>{ const x=MW*(0.12+i*0.06); creature(x, peakY(x)-5, i, 'rgba(198,242,78,.7)', .8, i===N-1); });
+  }
+  window.addEventListener('resize', ()=>{ initMini(); });
 
   // ---------- scroll reveals ----------
   const io = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12});

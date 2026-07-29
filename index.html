@@ -184,6 +184,15 @@
     font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut2); }
   .card .thumb img { position:absolute; inset:0; width:100%; height:100%;
     object-fit:cover; display:block; }
+  /* Tiles are 2.20:1 and 3.35:1 but the mobile thumb box is 1.81:1, so object-fit:cover
+     was slicing the sides off — the reOS logo and the outer Rank tiles were cut. On narrow
+     screens let the image set its own height instead, so nothing is cropped. */
+  @media (max-width:900px){
+    .card .thumb { height:auto; }
+    .card .thumb img { position:static; height:auto; object-fit:contain; }
+    .card.c-full .thumb { height:200px; }
+    .card.c-full .thumb canvas { position:absolute; }
+  }
   .livebadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:var(--ind); color:#fff;
     padding:2.5px 8px; border-radius:4px; letter-spacing:.12em; }
   a.lab { display:block; text-decoration:none; color:inherit; }
@@ -352,10 +361,10 @@
       <div class="thumb" style="height:240px"><canvas id="mini-evo"></canvas></div>
       <div class="body">
         <div class="no">04 / flagship · simulation + evolutionary computation <span class="yr">2024 · rebuilt 2026</span></div>
-        <h3><a class="ct" href="work/evolving-climbers/">Evolving Climbers <span class="flagbadge">FLAGSHIP</span> <span class="livebadge">CASE STUDY</span></a></h3>
+        <h3><a class="ct" href="work/evolving-creatures/">Evolving Creatures <span class="flagbadge">FLAGSHIP</span> <span class="livebadge">CASE STUDY</span></a></h3>
         <p>A genetic algorithm evolving 3D creatures in a PyBullet physics sim to climb a mountain — selection, crossover, mutation, honest fitness design that catches its own reward hacks, and an interactive explainer where you can step through evolution yourself. GA, not RL — and the writeup explains exactly why that distinction matters.</p>
         <div class="tags"><span class="t">python</span><span class="t">pybullet</span><span class="t">genetic algorithm</span><span class="t">interactive explainer</span></div>
-        <div class="links"><a class="primary" href="work/evolving-climbers/">Case study →</a><a href="https://github.com/peter-kautwima/evolving-creatures-genetic-algorithm" target="_blank" rel="noopener">Code ↗</a></div>
+        <div class="links"><a class="primary" href="work/evolving-creatures/">Case study →</a><a href="https://github.com/peter-kautwima/evolving-creatures-genetic-algorithm" target="_blank" rel="noopener">Code ↗</a></div>
       </div>
     </div>
 
@@ -413,17 +422,17 @@
     <div class="labs-inner">
       <div class="sec-head reveal"><h2>Labs <span class="thin">/ live experiments</span></h2><span class="idx">03 / poke the work</span></div>
       <div class="lab-row">
-        <a class="lab reveal" href="work/evolving-climbers/#loop">
+        <a class="lab reveal" href="work/evolving-creatures/#loop">
           <div class="icon">⛰</div>
           <h3>Evolution, step by step</h3>
           <p>Step through a real genetic algorithm one generation at a time — selection, crossover, mutation, elitism — and watch the fitness distribution shift on actual seeded experiment data.</p>
-          <span class="status live">LIVE</span><span class="go">open the stepper →</span><span class="dest">↗ opens the Evolving Climbers case study</span>
+          <span class="status live">LIVE</span><span class="go">open the stepper →</span><span class="dest">↗ opens the Evolving Creatures case study</span>
         </a>
-        <a class="lab reveal" href="work/evolving-climbers/#settings">
+        <a class="lab reveal" href="work/evolving-creatures/#settings">
           <div class="icon">🎛</div>
           <h3>Turn the GA's dials</h3>
           <p>Population size and mutation rate, swept across real runs. Switch between them and watch the curves redraw — the exploration-versus-exploitation tradeoff, on measured data rather than a diagram.</p>
-          <span class="status live">LIVE</span><span class="go">see the sweeps →</span><span class="dest">↗ opens the Evolving Climbers case study</span>
+          <span class="status live">LIVE</span><span class="go">see the sweeps →</span><span class="dest">↗ opens the Evolving Creatures case study</span>
         </a>
 
         <a class="lab reveal" href="work/cancer-detection/#gradcam">
@@ -473,14 +482,28 @@
   let W,H,P=[], mouse={x:-999,y:-999};
   const HERO={repel:170, link:105};
   function rs(){ const r=c.getBoundingClientRect(); W=c.width=r.width; H=c.height=r.height; }
-  function initHero(){ rs(); P=Array.from({length:110},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7})); }
+  function initHero(){ rs(); P=Array.from({length:110},()=>({
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.7, vy:(Math.random()-.5)*.7,
+    // per-agent drift phase, so the field keeps breathing with no pointer at all
+    px:Math.random()*Math.PI*2, py:Math.random()*Math.PI*2,
+    ps:.5+Math.random()*.9 })); }
   c.parentElement.addEventListener('mousemove',e=>{ const r=c.getBoundingClientRect(); mouse.x=e.clientX-r.left; mouse.y=e.clientY-r.top; });
   c.parentElement.addEventListener('mouseleave',()=>{ mouse.x=-999; mouse.y=-999; });
-  function loopHero(){
+  // touch: drag anywhere in the hero to push the field around
+  c.parentElement.addEventListener('touchmove',e=>{ const t=e.touches[0]; if(!t) return;
+    const r=c.getBoundingClientRect(); mouse.x=t.clientX-r.left; mouse.y=t.clientY-r.top; }, {passive:true});
+  c.parentElement.addEventListener('touchend',()=>{ mouse.x=-999; mouse.y=-999; }, {passive:true});
+  function loopHero(t){
+    t = t || 0;
     x.clearRect(0,0,W,H);
     for(const p of P){
       const dx=mouse.x-p.x, dy=mouse.y-p.y, d=Math.hypot(dx,dy)||1;
       if(d<HERO.repel){ p.vx-=dx/d*.32; p.vy-=dy/d*.32; }
+      // ambient drift: friction alone settled the field to a standstill whenever the
+      // cursor stopped, so each agent gets a slow independent wander of its own
+      p.vx += Math.cos(t*0.00022*p.ps + p.px)*0.012;
+      p.vy += Math.sin(t*0.00019*p.ps + p.py)*0.012;
       p.vx*=.985; p.vy*=.985; p.x+=p.vx; p.y+=p.vy;
       if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
       p.x=Math.max(0,Math.min(W,p.x)); p.y=Math.max(0,Math.min(H,p.y));

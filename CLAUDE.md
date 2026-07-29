@@ -16,7 +16,7 @@ front-end skill to a hiring manager) and a showcase for my ML/AI + engineering w
 The revamp runs in two phases. **Phase 1 (this repo, now):** a static site with no build
 step. `index.html` at the repo root is the home page (inline CSS/JS), built from the locked
 design file `portfolio-homepage-prototype.html`. Case studies live under `work/`, one
-self-contained page each — the first is `work/evolving-climbers/`. **Phase 2 (planned):**
+self-contained page each — the first is `work/evolving-creatures/`. **Phase 2 (planned):**
 the Next.js + TypeScript + Tailwind + MDX rebuild described in the rest of this document.
 
 **Testing locally:** case-study links point at folders (`work/<slug>/`) to keep public URLs
@@ -64,7 +64,7 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
 - **Motion:** a generative particle/flock system in the hero that reacts to cursor and
   reads as "evolving"; marquees; chunky magnetic hovers; bold section transitions.
   Everything must honor `prefers-reduced-motion` and never block first paint.
-- **Signature hero:** the home hero should feature the Evolving Climbers simulation —
+- **Signature hero:** the home hero should feature the Evolving Creatures simulation —
   ideally a looping **video background** of the sim (or the generative canvas as a
   lighter fallback). This ties the whole identity to "systems that adapt."
 - The shipped Phase 1 build is `index.html` (from `portfolio-homepage-prototype.html`,
@@ -78,8 +78,8 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
 - **Spokes:** the projects. Featured case studies:
   1. University cancer-detection project (coursework — frame it as such).
   2. A RAG pipeline.
-  3. "Evolving Climbers" — the GA creatures sim. It has its own interactive explainer
-     in a SEPARATE repo (`evolving-climbers`), built decoupled and data-driven. Plan
+  3. "Evolving Creatures" — the GA creatures sim. It has its own interactive explainer
+     in a SEPARATE repo (`evolving-creatures`), built decoupled and data-driven. Plan
      to embed/port that explainer here as a native case-study route reading the same
      results data — reuse, don't rebuild from scratch.
   4. A few other repositories (I'll point you to them).
@@ -104,7 +104,7 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
 
 4. **Honest framing — hard rule.** Every case study must be accurate about what I built
    and what the project is. The cancer-detection project is UNIVERSITY COURSEWORK — say
-   so. "Evolving Climbers" is a GENETIC ALGORITHM in a PROVIDED physics environment,
+   so. "Evolving Creatures" is a GENETIC ALGORITHM in a PROVIDED physics environment,
    NOT reinforcement learning, and I did not build the base simulator. Copy must never
    overclaim: no "trained an agent," no "built the simulator," no inflated role.
    Impressive AND accurate. If any draft copy crosses this line, STOP and fix it.
@@ -144,7 +144,7 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
    ```
 
    Do not accept "I'll switch later" — by then the commits are in the wrong place and
-   fixing it needs a rebase or a force push. If work has _already_ started on the wrong
+   fixing it needs a rebase or a force push. If work has *already* started on the wrong
    branch, the cheap recovery is `git branch -m <better-name>` before pushing, or simply
    continuing there and naming the PR accurately; do not rewrite pushed history to tidy a
    branch name.
@@ -168,17 +168,17 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
 
 Phase 1 (current, static):
 
-| Path                                | Purpose                                              |
-| ----------------------------------- | ---------------------------------------------------- |
-| `index.html`                        | Home page — single file, inline CSS/JS               |
-| `work/<slug>/index.html`            | One self-contained case study per folder (see below) |
-| `assets/peter-kautwima-cv-2026.pdf` | CV, linked from nav and footer                       |
-| `assets/favicon.svg`                | "PK" favicon, site colours                           |
-| `assets/og-image.png`               | 1200×630 Open Graph / Twitter card image             |
-| `preview.command`                   | Double-click to run the site locally (macOS)         |
-| `robots.txt`                        | Allow-all                                            |
-| `CLAUDE.md` · `README.md`           | Working rules (this file) · public repo front        |
-| `.claude/settings.json`             | Claude Code harness settings (no co-author trailer)  |
+| Path | Purpose |
+|---|---|
+| `index.html` | Home page — single file, inline CSS/JS |
+| `work/<slug>/index.html` | One self-contained case study per folder (see below) |
+| `assets/peter-kautwima-cv-2026.pdf` | CV, linked from nav and footer |
+| `assets/favicon.svg` | "PK" favicon, site colours |
+| `assets/og-image.png` | 1200×630 Open Graph / Twitter card image |
+| `preview.command` | Double-click to run the site locally (macOS) |
+| `robots.txt` | Allow-all |
+| `CLAUDE.md` · `README.md` | Working rules (this file) · public repo front |
+| `.claude/settings.json` | Claude Code harness settings (no co-author trailer) |
 
 Phase 2 target tree (proposed; confirm in the spec step):
 
@@ -193,7 +193,7 @@ peterkautwima.com/
 │   ├── components/               # design-system + layout components
 │   │   ├── ui/                   # primitives (Button, Card, Tag, Figure, Callout)
 │   │   ├── case-study/           # case-study section blocks
-│   │   └── demos/                # interactive pieces (e.g. Evolving Climbers explainer)
+│   │   └── demos/                # interactive pieces (e.g. Evolving Creatures explainer)
 │   ├── lib/                      # content loading, metadata, og-image helpers
 │   ├── styles/                   # tokens, globals
 │   └── data/                     # site config, project index, social links
@@ -204,14 +204,14 @@ peterkautwima.com/
 Names/layout are a starting proposal — settle them in the spec step, then treat the
 agreed tree as locked.
 
-## Relationship to the evolving-climbers repo
+## Relationship to the evolving-creatures repo
 
 The creatures sim + its interactive explainer live in their own repo, decoupled and
 data-driven (all logic reads from a results JSON). This portfolio depends on that project's
 OUTPUT; it never reimplements the simulation.
 
 **Shipped (Phase 0, July 2026):** the generated explainer is **copied** — never moved — into
-`work/evolving-climbers/index.html` and served as a case-study route. It is fully
+`work/evolving-creatures/index.html` and served as a case-study route. It is fully
 self-contained (experiment data and video inlined as base64), so it needs nothing else from
 this repo.
 
@@ -230,7 +230,4 @@ reading the same data. Until then the copied file IS the case study.
   repo and part of the credential.
 - **The design spec (from rule 1)** — the agreed IA, template, content model, and
   visual direction. If a page would deviate from it, STOP and flag before building.
-
-```
-
 ```

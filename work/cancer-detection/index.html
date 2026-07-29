@@ -41,6 +41,8 @@
     font-size:12px; text-decoration:none; color:var(--acc); border:1.5px solid var(--acc-dim);
     padding:9px 14px; border-radius:999px; white-space:nowrap; transition:.16s; }
   nav .home:hover, nav .home:focus-visible { background:var(--acc); color:var(--bg); border-color:var(--acc); }
+  nav .home .lbl-short { display:none; }
+  @media (max-width:760px){ nav .home .lbl-full { display:none; } nav .home .lbl-short { display:inline; } }
   nav .secs { display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; min-width:0; }
   nav .secs::-webkit-scrollbar { display:none; }
   nav .secs a { font-family:'JetBrains Mono',monospace; font-size:11.5px; text-decoration:none;
@@ -56,8 +58,14 @@
   h2 { font-family:'Archivo Black',sans-serif; font-size:clamp(26px,4vw,42px); line-height:1.05;
     text-transform:uppercase; letter-spacing:-.02em; margin-bottom:20px; }
   h3 { font-size:19px; font-weight:700; margin:32px 0 10px; }
-  p { color:var(--mut); font-size:15.5px; line-height:1.75; max-width:74ch; margin-bottom:16px; }
+  p { color:var(--mut); font-size:15.5px; line-height:1.75; margin-bottom:16px; }
+  ul, ol { color:var(--mut); font-size:15.5px; line-height:1.75; margin:0 0 16px 1.1em; }
+  li { margin-bottom:8px; }
   p b, p strong { color:var(--ink); font-weight:600; }
+  /* Body copy fills the column rather than stopping at a reading measure. Long lines are
+     harder to track, so the type steps up on wide screens to partly compensate. */
+  @media (min-width:1100px){ p, ul, ol, .call { font-size:20px; line-height:1.8; } }
+  @media (min-width:1400px){ p, ul, ol, .call { font-size:21px; } }
   a.inl { color:var(--acc); }
 
   /* hero */
@@ -65,7 +73,7 @@
   @media (max-width:700px){ header.hero { padding:44px 20px 36px; } }
   header.hero h1 { font-family:'Archivo Black',sans-serif; font-size:clamp(38px,7.5vw,86px);
     line-height:.92; letter-spacing:-.03em; text-transform:uppercase; margin-bottom:24px; }
-  .lede { font-size:clamp(17px,2.1vw,22px); line-height:1.5; color:var(--ink); font-weight:500; max-width:60ch; }
+  .lede { font-size:clamp(17px,2.1vw,22px); line-height:1.5; color:var(--ink); font-weight:500; }
   .badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:26px; }
   .badge { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.12em;
     padding:7px 12px; border-radius:5px; border:1px dashed var(--line2); color:var(--mut); }
@@ -82,8 +90,7 @@
   /* Paragraphs are capped at 74ch for readability, so callouts and figures are capped to
      match — otherwise the column has two different right edges and reads as unresolved. */
   .call { border:1px solid var(--line2); border-left:4px solid var(--acc); border-radius:0 14px 14px 0;
-    padding:22px 26px; background:var(--panel); margin:26px 0;
-    max-width:74ch; font-size:15.5px; }
+    padding:22px 26px; background:var(--panel); margin:26px 0; font-size:15.5px; }
   .call.warn { border-left-color:var(--warn); }
   .call h4 { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em;
     text-transform:uppercase; color:var(--acc); margin-bottom:10px; }
@@ -178,7 +185,7 @@
 <body>
 
 <nav>
-  <a class="home" href="/"><span aria-hidden="true">&larr;</span> Peter&nbsp;Kautwima</a>
+  <a class="home" href="/"><span aria-hidden="true">&larr;</span><span class="lbl-full">Peter&nbsp;Kautwima</span><span class="lbl-short">Portfolio</span></a>
   <div class="secs">
     <a href="#what">What it is</a><a href="#data">Data</a><a href="#pipeline">Pipeline</a>
     <a href="#results">Results</a><a href="#failed">What failed</a><a href="#gradcam">Where it looked</a>

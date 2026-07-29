@@ -1,0 +1,4 @@
+# The Evolving Creatures case study was published at /work/evolving-climbers/ before the
+# project was renamed. Keep the old URL working for anything already shared or indexed.
+/work/evolving-climbers/*   /work/evolving-creatures/:splat   301!
+/work/evolving-climbers     /work/evolving-creatures/         301!

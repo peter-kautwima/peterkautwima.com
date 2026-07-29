@@ -154,6 +154,29 @@
   .lab.soon .stamp { position:absolute; top:18px; right:-38px; transform:rotate(35deg);
     font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.22em; color:var(--bg);
     background:var(--acc); padding:5px 44px; opacity:.9; }
+  /* Card links. The title is a real <a>; its ::after stretches over the whole card so a
+     mouse click anywhere works, while the link row sits above it on z-index. This replaces
+     the old div+JS click handler, so keyboard, right-click and open-in-new-tab all work. */
+  .card { position:relative; }
+  .card h3 a.ct { color:inherit; text-decoration:none; }
+  .card h3 a.ct::after { content:''; position:absolute; inset:0; z-index:0; }
+  .card:focus-within { border-color:var(--acc); }
+  .card h3 a.ct:focus-visible { outline:none; }
+  .card:focus-within::before { content:''; position:absolute; inset:-3px; border-radius:18px;
+    border:2px solid var(--acc); pointer-events:none; z-index:3; }
+  .card .links { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;
+    padding-top:14px; border-top:1px solid var(--line); }
+  .card .links a { font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em;
+    text-decoration:none; padding:5px 11px; border-radius:999px; border:1px solid var(--line2);
+    color:var(--mut); transition:.16s; white-space:nowrap;
+    position:relative; z-index:1; }
+  .card .links a:hover { color:var(--bg); background:var(--acc); border-color:var(--acc); }
+  .card .links a:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+  .card .links a.primary { color:var(--acc); border-color:var(--acc-dim); background:#151a07; }
+  .card .links a.primary:hover { color:var(--bg); background:var(--acc); }
+  .lab-wide { grid-column:1/-1; margin-top:4px; }
+  .lab .dest { display:block; margin-top:10px; font-family:'JetBrains Mono',monospace;
+    font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mut2); }
   .livebadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:var(--ind); color:#fff;
     padding:2.5px 8px; border-radius:4px; letter-spacing:.12em; }
   a.lab { display:block; text-decoration:none; color:inherit; }
@@ -163,11 +186,15 @@
     display:inline-block; padding:4px 10px; border-radius:999px; letter-spacing:.08em;
     color:#b3a8ff; border:1px solid #2c2755; background:#131030; }
   a.lab:hover .go { background:var(--ind); border-color:var(--ind); color:#fff; }
-  .lab-row { grid-auto-rows:1fr; }
+  .lab-row { align-items:start; }
   .lab-toggle { margin-top:16px; margin-left:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
     letter-spacing:.08em; padding:4px 12px; border-radius:999px; background:transparent;
     color:#b3a8ff; border:1px solid #2c2755; cursor:pointer; }
-  .lab-toggle:hover { background:#131030; }
+  .lab-toggle:hover, .lab-toggle:focus-visible { background:var(--ind); border-color:var(--ind); color:#fff; }
+  .lab-toggle:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+  a.status.jump { text-decoration:none; transition:.16s; }
+  a.status.jump:hover, a.status.jump:focus-visible { background:var(--acc); color:var(--bg); border-color:var(--acc); }
+  a.status.jump:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
   .lab-panel { margin-top:16px; border-top:1px solid var(--line2); padding-top:16px; }
   .lab-panel[hidden] { display:none; }
   .lab-panel p { margin-bottom:14px; }
@@ -195,6 +222,27 @@
   .foot-row a { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mut); text-decoration:none; }
   .foot-row a:hover { color:var(--acc); }
   .foot-row .fine { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut2); }
+
+  /* ---------- touch / pointer targets (kept last so it overrides earlier rules) ----------
+     WCAG 2.2 AA (2.5.8) wants interactive targets at least 24x24 CSS px. Measured before
+     this block: card link pills 24px (exactly on the floor), .lab-toggle 21px, the "PK."
+     mark 20px, and the footer links only 14px — the last three pre-dating this work.
+     Footer and mark are corrected at every size; the rest grow toward Apple's 44px
+     guidance on coarse pointers, so tablets are covered as well as phones. */
+  nav .mark { padding:6px 6px; display:inline-block; }
+  .lab-toggle { padding:8px 14px; }
+  a.status.jump { padding:8px 12px; }
+  .foot-row .links { gap:4px; flex-wrap:wrap; }
+  .foot-row a { padding:10px 12px; display:inline-block; }
+  .foot-row .links a:first-child { padding-left:0; }
+  @media (max-width:900px), (pointer:coarse){
+    .card .links { gap:10px; }
+    .card .links a { font-size:11px; padding:12px 16px; }
+    .lab .go, .lab .status { padding:11px 15px; font-size:11px; }
+    .lab .go { margin-top:12px; }
+    .lab-toggle { padding:11px 15px; font-size:11px; margin-left:0; }
+    .foot-row a { padding:12px 14px; }
+  }
 </style>
 </head>
 <body>
@@ -210,7 +258,7 @@
   </div>
 </nav>
 
-<header class="hero">
+<header class="hero" id="top">
   <canvas id="evo"></canvas>
   <div class="wrap">
     <div class="eyebrow">ml/ai engineer · full-stack · cape town → the world</div>
@@ -258,87 +306,95 @@
 
     <div class="group-label reveal">production work</div>
 
-    <div class="card c-third reveal" data-href="https://www.meccabingo.com/jackpots">
+    <div class="card c-third reveal">
       <div class="thumb" style="background:#120c14"><div class="ph" style="color:#2c1c33">rank</div></div>
       <div class="body">
         <div class="no">01 / employer project <span class="yr">2025</span></div>
-        <h3>Jackpot Carousel @ Rank</h3>
+        <h3><a class="ct" href="https://www.meccabingo.com/jackpots" target="_blank" rel="noopener">Jackpot Carousel @ Rank</a></h3>
         <p>A real-time jackpot carousel live on Mecca Bingo and Grosvenor Casino: a Cloudflare Worker polls and caches jackpot values from multiple providers, and a Remix service layer streams them into smoothly animated UI. Multi-provider normalisation, polling architecture and cache invalidation under production traffic — the code stays with the employer; the live site speaks for itself.</p>
         <div class="tags"><span class="t ind">react</span><span class="t ind">typescript</span><span class="t ind">remix</span><span class="t ind">storybook</span><span class="t ind">cloudflare workers</span></div>
+        <div class="links"><a href="https://www.meccabingo.com/jackpots" target="_blank" rel="noopener">Live ↗</a></div>
       </div>
     </div>
 
-    <div class="card c-third reveal" data-href="https://www.reos.co.za/">
+    <div class="card c-third reveal">
       <div class="thumb" style="background:#0c0c0c"><div class="ph" style="color:#222">reos</div></div>
       <div class="body">
         <div class="no">02 / employer project <span class="yr">2021–2022</span></div>
-        <h3>reOS</h3>
+        <h3><a class="ct" href="https://www.reos.co.za/" target="_blank" rel="noopener">reOS</a></h3>
         <p>Front-end engineer on a customer-facing rental-management platform — built the support team's payment-reconciliation tool, user invitations and role permissions, file management and dashboard stats. Joined as an intern; full-time junior four months later.</p>
         <div class="tags"><span class="t ind">react</span><span class="t ind">typescript</span><span class="t ind">redux</span></div>
+        <div class="links"><a href="https://www.reos.co.za/" target="_blank" rel="noopener">Live ↗</a></div>
       </div>
     </div>
 
-    <div class="card c-third reveal" data-href="https://latierraagave.vercel.app/">
+    <div class="card c-third reveal">
       <div class="thumb" style="background:#12100a"><div class="ph" style="color:#2e2816">la tierra</div></div>
       <div class="body">
         <div class="no">03 / client work <span class="yr">2022</span></div>
-        <h3>La Tierra</h3>
+        <h3><a class="ct" href="https://latierraagave.vercel.app/" target="_blank" rel="noopener">La Tierra</a></h3>
         <p>Client site for an agave brand — Next.js + Tailwind with tabbed product offerings and a Rive-animated windmill running on the Rive JS runtime. The project where I properly learned Next.js.</p>
         <div class="tags"><span class="t ind">next.js</span><span class="t ind">tailwind</span><span class="t ind">rive</span></div>
+        <div class="links"><a href="https://latierraagave.vercel.app/" target="_blank" rel="noopener">Live ↗</a></div>
       </div>
     </div>
 
     <div class="group-label reveal">research &amp; ml</div>
 
-    <div class="card c-full reveal" data-href="work/evolving-climbers/">
+    <div class="card c-full reveal">
       <div class="thumb" style="height:240px"><div class="ph">climb</div><canvas id="mini-evo"></canvas></div>
       <div class="body">
         <div class="no">04 / flagship · simulation + evolutionary computation <span class="yr">2024 · rebuilt 2026</span></div>
-        <h3>Evolving Climbers <span class="flagbadge">FLAGSHIP</span> <span class="livebadge">CASE STUDY</span></h3>
+        <h3><a class="ct" href="work/evolving-climbers/">Evolving Climbers <span class="flagbadge">FLAGSHIP</span> <span class="livebadge">CASE STUDY</span></a></h3>
         <p>A genetic algorithm evolving 3D creatures in a PyBullet physics sim to climb a mountain — selection, crossover, mutation, honest fitness design that catches its own reward hacks, and an interactive explainer where you can step through evolution yourself. GA, not RL — and the writeup explains exactly why that distinction matters.</p>
         <div class="tags"><span class="t">python</span><span class="t">pybullet</span><span class="t">genetic algorithm</span><span class="t">interactive explainer</span></div>
+        <div class="links"><a class="primary" href="work/evolving-climbers/">Case study →</a><a href="https://github.com/peter-kautwima/evolving-creatures-genetic-algorithm" target="_blank" rel="noopener">Code ↗</a></div>
       </div>
     </div>
 
-    <div class="card c-3 reveal" data-href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification">
+    <div class="card c-3 reveal">
       <div class="thumb" style="background:#0d0a14"><div class="ph" style="color:#241a35">scan</div></div>
       <div class="body">
         <div class="no">05 / deep learning · coursework <span class="honbadge">UNIVERSITY PROJECT</span> <span class="yr">2026</span></div>
-        <h3>Breast Cancer Detection</h3>
+        <h3><a class="ct" href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification" target="_blank" rel="noopener">Breast Cancer Detection</a></h3>
         <p>A four-stage pipeline — baseline CNN → frozen VGG16 → regularisation → fine-tuning — on CBIS-DDSM mammography, with Grad-CAM heatmaps showing where the model looks, including on the cases it gets wrong. Honest headline: AUC 0.77 on 714 held-out scans — above the published mean-radiologist benchmark, below clinical grade, and the case study says so up front.</p>
         <div class="tags"><span class="t">tensorflow</span><span class="t">cnn</span><span class="t">grad-cam</span></div>
+        <div class="links"><a href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification" target="_blank" rel="noopener">Code ↗</a></div>
       </div>
     </div>
 
-    <div class="card c-3 reveal" data-href="https://rag-document-pipeline-vercel-h1e4.vercel.app/">
+    <div class="card c-3 reveal">
       <div class="thumb" style="background:#0a0d12"><div class="ph" style="color:#16222e">rag</div></div>
       <div class="body">
         <div class="no">06 / applied llm <span class="yr">2026</span></div>
-        <h3>Document Q&amp;A (RAG)</h3>
+        <h3><a class="ct" href="https://rag-document-pipeline-vercel-h1e4.vercel.app/" target="_blank" rel="noopener">Document Q&amp;A (RAG)</a></h3>
         <p>Retrieval-augmented pipeline: chunking, local sentence-transformer embeddings, cosine search, and grounded answers citing their source chunks — plus a similarity guardrail that says "no relevant content" instead of hallucinating. FastAPI backend, React + TypeScript front end, 61 tests and an evaluation harness grading retrieval quality.</p>
         <div class="tags"><span class="t">python</span><span class="t">embeddings</span><span class="t">fastapi</span><span class="t ind">react</span><span class="t ind">typescript</span></div>
+        <div class="links"><a href="https://rag-document-pipeline-vercel-h1e4.vercel.app/" target="_blank" rel="noopener">Live ↗</a><a href="https://github.com/peter-kautwima/clickatell-assessment" target="_blank" rel="noopener">Code ↗</a></div>
       </div>
     </div>
 
     <div class="group-label reveal">play</div>
 
-    <div class="card c-3 reveal" data-href="https://gameslot.peterkautwima.com">
+    <div class="card c-3 reveal">
       <div class="thumb" style="background:#120a0a"><div class="ph" style="color:#2e1616">spin</div></div>
       <div class="body">
         <div class="no">07 / play <span class="yr">2022</span></div>
-        <h3>Gameslot</h3>
+        <h3><a class="ct" href="https://gameslot.peterkautwima.com" target="_blank" rel="noopener">Gameslot</a></h3>
         <p>A slot game wired to live PokéAPI data — three reels, a wallet that stakes each spin and pays out multiples on a win, and CSS-keyframe reel animation synced to state updates. Small, complete, and fun.</p>
         <div class="tags"><span class="t ind">react</span><span class="t ind">rest api</span></div>
+        <div class="links"><a href="https://gameslot.peterkautwima.com" target="_blank" rel="noopener">Live ↗</a><a href="https://github.com/peter-kautwima/gameslot" target="_blank" rel="noopener">Code ↗</a></div>
       </div>
     </div>
 
-    <div class="card c-3 reveal" data-href="https://crypto-hunter.peterkautwima.com">
+    <div class="card c-3 reveal">
       <div class="thumb" style="background:#0a1208"><div class="ph" style="color:#1a2e14">hunt</div></div>
       <div class="body">
         <div class="no">08 / origin story <span class="yr">2022 · rebuild in progress</span></div>
-        <h3>Crypto Hunter</h3>
+        <h3><a class="ct" href="https://crypto-hunter.peterkautwima.com" target="_blank" rel="noopener">Crypto Hunter</a></h3>
         <p>A p5.js platformer from first-year programming — collect the coins, dodge the enemies — the first code I ever shipped. Kept here deliberately: an AI-assisted rebuild is underway, and the before/after will live side by side.</p>
         <div class="tags"><span class="t ind">p5.js</span><span class="t ind">javascript</span></div>
+        <div class="links"><a href="https://crypto-hunter.peterkautwima.com" target="_blank" rel="noopener">Live ↗</a><a href="https://github.com/peter-kautwima/crypto-hunter" target="_blank" rel="noopener">Code ↗</a></div>
       </div>
     </div>
 
@@ -354,13 +410,13 @@
           <div class="icon">⛰</div>
           <h3>Evolution, step by step</h3>
           <p>Step through a real genetic algorithm one generation at a time — selection, crossover, mutation, elitism — and watch the fitness distribution shift on actual seeded experiment data.</p>
-          <span class="status live">LIVE</span><span class="go">open the stepper →</span>
+          <span class="status live">LIVE</span><span class="go">open the stepper →</span><span class="dest">↗ opens the Evolving Climbers case study</span>
         </a>
         <a class="lab reveal" href="work/evolving-climbers/#settings">
           <div class="icon">🎛</div>
           <h3>Turn the GA's dials</h3>
           <p>Population size and mutation rate, swept across real runs. Switch between them and watch the curves redraw — the exploration-versus-exploitation tradeoff, on measured data rather than a diagram.</p>
-          <span class="status live">LIVE</span><span class="go">see the sweeps →</span>
+          <span class="status live">LIVE</span><span class="go">see the sweeps →</span><span class="dest">↗ opens the Evolving Climbers case study</span>
         </a>
 
         <div class="lab soon reveal">
@@ -370,11 +426,13 @@
           <p>A Grad-CAM explorer over held-out mammograms: pick a scan, see the prediction, confidence, and the exact regions that drove it — including the cases the model got wrong, on purpose.</p>
           <span class="status soon">SHIPS WITH CANCER DETECTION</span>
         </div>
-        <div class="lab reveal">
+        
+
+<div class="lab lab-wide reveal">
           <div class="icon">✦</div>
           <h3>This hero, explained</h3>
           <p>The particle system on the front page is a live flocking sim that reacts to your cursor. A short interactive note on how it works — and how it hands off to the real evolution footage.</p>
-          <span class="status live">LIVE ON THIS PAGE</span><button class="lab-toggle" id="lab-toggle">open the dials →</button>
+          <a class="status live jump" href="#top">LIVE ON THIS PAGE ↑</a><button class="lab-toggle" id="lab-toggle">open the dials →</button>
           <div class="lab-panel" id="lab-panel" hidden>
             <p>Each dot is an agent with a velocity. Every frame: your cursor repels agents inside the repel radius, velocities decay (friction), and any two agents closer than the link distance get a line whose opacity falls with distance. That's it — the "organism" look is pure emergence. Drag the dials and watch the hero change behaviour live:</p>
             <div class="ctl"><span>repel radius</span><input type="range" id="ctl-repel" min="40" max="400" step="1" value="170"><span class="v" id="v-repel">170</span></div>
@@ -467,14 +525,8 @@
     if(el){ el.addEventListener('input',()=>{ HERO[key]=+el.value; v.textContent=el.value; }); } };
   wire('ctl-repel','v-repel','repel'); wire('ctl-link','v-link','link');
 
-  // card links
-  document.querySelectorAll('.card[data-href]').forEach(el=>{
-    const go=()=>{ const h=el.dataset.href;
-      // internal routes navigate in place; external ones open in a new tab
-      if(/^https?:/i.test(h)) window.open(h,'_blank','noopener'); else location.href=h;
-    };
-    el.addEventListener('click',go);
-  });
+  // Card navigation is pure HTML now — each card's title is a real link whose ::after
+  // covers the card. No JS click handler, so keyboard and modifier-clicks work natively.
 </script>
 </body>
 </html>

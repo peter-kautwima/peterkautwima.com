@@ -8,7 +8,7 @@ a live flocking simulation in the hero that reacts to your cursor (open the dial
 Labs section to play with it). Every project card links to a live demo, live site, case
 study, or public repo — honest framing over a wall of claims.
 
-Case studies live under `/work/`. The first is **Evolving Climbers**, a self-contained
+Case studies live under `/work/`. The first is **Evolving Creatures**, a self-contained
 interactive explainer for the genetic-algorithm creatures project.
 
 ## Repo structure
@@ -16,7 +16,7 @@ interactive explainer for the genetic-algorithm creatures project.
 | Path | Purpose |
 |---|---|
 | `index.html` | The home page — one file, inline CSS/JS, no build step |
-| `work/evolving-climbers/index.html` | Evolving Climbers case study (see *Case studies* below) |
+| `work/evolving-creatures/index.html` | Evolving Creatures case study (see *Case studies* below) |
 | `assets/peter-kautwima-cv-2026.pdf` | CV, linked from nav and footer |
 | `assets/favicon.svg` | "PK" favicon in the site colours |
 | `assets/og-image.png` | 1200×630 Open Graph / Twitter card image |
@@ -27,7 +27,7 @@ interactive explainer for the genetic-algorithm creatures project.
 
 ## Case studies
 
-`work/evolving-climbers/index.html` is a **copy** of the explainer generated in the
+`work/evolving-creatures/index.html` is a **copy** of the explainer generated in the
 [evolving-creatures-genetic-algorithm](https://github.com/peter-kautwima/evolving-creatures-genetic-algorithm)
 repo (`explainer/index.html`, built from `results/` by `explainer/build_data.py`). It is
 fully self-contained — experiment data and video are inlined — so it needs no assets from
@@ -42,7 +42,7 @@ Portfolio-only divergences from the source file:
 1. A `← Peter Kautwima` home link in the sticky bar, so visitors who deep-link in from the
    Labs section can get back to the site.
 2. Canonical URL, favicon, and Open Graph / Twitter metadata for the
-   `/work/evolving-climbers/` route.
+   `/work/evolving-creatures/` route.
 
 The Labs section on the home page deep-links into this page's `#loop` (the generation
 stepper) and `#settings` (the population and mutation dials).
@@ -69,11 +69,11 @@ python3 -m http.server 8000
 ```
 
 Either way, use a server rather than double-clicking `index.html`. Links to case studies
-point at folders (e.g. `work/evolving-climbers/`) so the public URLs stay clean — and
+point at folders (e.g. `work/evolving-creatures/`) so the public URLs stay clean — and
 resolving a folder to its `index.html` is something a *web server* does. Opened straight
 from disk there is no server, so those links land on a folder listing instead of the page.
 
-(Opening `work/evolving-climbers/index.html` directly does work — it is self-contained. It
+(Opening `work/evolving-creatures/index.html` directly does work — it is self-contained. It
 is only the links *between* pages that need the server.)
 
 ## Deploy

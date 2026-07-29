@@ -131,6 +131,24 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
    authored by ME alone — no Co-Authored-By trailer: ensure `.claude/settings.json`
    contains `{"includeCoAuthoredBy": false}` before the first commit of any session.
 
+   **BRANCH CHECK — run this before writing a single file of new work.** One unit of work
+   (a phase, a feature, a fix) = one branch off an up-to-date `master` = one PR. This has
+   already gone wrong once: Phase 1 was built and committed onto Phase 0's already-merged
+   branch because nobody checked first.
+
+   ```sh
+   git branch --show-current     # am I on a stale/merged branch?
+   git status --short            # any uncommitted work to deal with first?
+   git checkout master && git pull
+   git checkout -b feat/<this-unit-of-work>
+   ```
+
+   Do not accept "I'll switch later" — by then the commits are in the wrong place and
+   fixing it needs a rebase or a force push. If work has _already_ started on the wrong
+   branch, the cheap recovery is `git branch -m <better-name>` before pushing, or simply
+   continuing there and naming the PR accurately; do not rewrite pushed history to tidy a
+   branch name.
+
 9. **SEO baseline on every page.** Per-page title/description metadata, Open Graph
    images (generate them), a sitemap, and semantic headings. This is a portfolio — it
    should be findable and share cleanly.
@@ -150,17 +168,17 @@ personal-brand brutalism, playful stat cards), Stone Investment (cinematic video
 
 Phase 1 (current, static):
 
-| Path | Purpose |
-|---|---|
-| `index.html` | Home page — single file, inline CSS/JS |
-| `work/<slug>/index.html` | One self-contained case study per folder (see below) |
-| `assets/peter-kautwima-cv-2026.pdf` | CV, linked from nav and footer |
-| `assets/favicon.svg` | "PK" favicon, site colours |
-| `assets/og-image.png` | 1200×630 Open Graph / Twitter card image |
-| `preview.command` | Double-click to run the site locally (macOS) |
-| `robots.txt` | Allow-all |
-| `CLAUDE.md` · `README.md` | Working rules (this file) · public repo front |
-| `.claude/settings.json` | Claude Code harness settings (no co-author trailer) |
+| Path                                | Purpose                                              |
+| ----------------------------------- | ---------------------------------------------------- |
+| `index.html`                        | Home page — single file, inline CSS/JS               |
+| `work/<slug>/index.html`            | One self-contained case study per folder (see below) |
+| `assets/peter-kautwima-cv-2026.pdf` | CV, linked from nav and footer                       |
+| `assets/favicon.svg`                | "PK" favicon, site colours                           |
+| `assets/og-image.png`               | 1200×630 Open Graph / Twitter card image             |
+| `preview.command`                   | Double-click to run the site locally (macOS)         |
+| `robots.txt`                        | Allow-all                                            |
+| `CLAUDE.md` · `README.md`           | Working rules (this file) · public repo front        |
+| `.claude/settings.json`             | Claude Code harness settings (no co-author trailer)  |
 
 Phase 2 target tree (proposed; confirm in the spec step):
 
@@ -212,4 +230,7 @@ reading the same data. Until then the copied file IS the case study.
   repo and part of the credential.
 - **The design spec (from rule 1)** — the agreed IA, template, content model, and
   visual direction. If a page would deviate from it, STOP and flag before building.
+
+```
+
 ```

@@ -140,7 +140,12 @@
   .lab-row { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   @media (max-width:900px){ .lab-row{ grid-template-columns:1fr; } }
   .lab { border:1px solid var(--line2); border-radius:16px; padding:24px; background:var(--bg); transition:.2s; position:relative; }
-  .lab:hover { border-color:var(--ind); transform:translateY(-4px); }
+  /* Only cards that are themselves links get whole-card hover feedback. The hero card is
+     a div whose button is the only control, so lifting it would promise a click that does
+     nothing. It gets a border cue instead, and the button reacts on its own hover. */
+  a.lab:hover, a.lab:focus-within { border-color:var(--ind); transform:translateY(-4px); }
+  .lab-wide:hover { border-color:var(--line2); transform:none; }
+  .lab-wide:focus-within { border-color:var(--ind); }
   .lab .icon { width:44px; height:44px; border-radius:11px; display:flex; align-items:center; justify-content:center;
     background:#131030; border:1px solid #2c2755; margin-bottom:16px; font-size:20px; color:#b3a8ff; }
   .lab h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
@@ -180,12 +185,12 @@
   .livebadge { font-family:'JetBrains Mono',monospace; font-size:9px; background:var(--ind); color:#fff;
     padding:2.5px 8px; border-radius:4px; letter-spacing:.12em; }
   a.lab { display:block; text-decoration:none; color:inherit; }
-  a.lab:hover { border-color:var(--ind); transform:translateY(-4px); }
   a.lab:focus-visible { outline:2px solid var(--acc); outline-offset:3px; }
   .lab .go { font-family:'JetBrains Mono',monospace; font-size:10px; margin-top:16px;
     display:inline-block; padding:4px 10px; border-radius:999px; letter-spacing:.08em;
     color:#b3a8ff; border:1px solid #2c2755; background:#131030; }
-  a.lab:hover .go { background:var(--ind); border-color:var(--ind); color:#fff; }
+  a.lab:hover .go, a.lab:focus-within .go, .lab .go:hover {
+    background:var(--ind); border-color:var(--ind); color:#fff; }
   .lab-row { align-items:start; }
   .lab-toggle { margin-top:16px; margin-left:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
     letter-spacing:.08em; padding:4px 12px; border-radius:999px; background:transparent;

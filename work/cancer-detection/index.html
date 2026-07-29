@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breast Cancer Detection — CNN transfer learning on CBIS-DDSM · Peter Kautwima</title>
+<meta name="description" content="A university deep-learning pipeline classifying mammograms: baseline CNN to fine-tuned VGG16, AUC 0.77 on 714 held-out scans, with a Grad-CAM explorer showing where the model looked — including on the cases it got wrong.">
+<link rel="canonical" href="https://peterkautwima.com/work/cancer-detection/">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://peterkautwima.com/work/cancer-detection/">
+<meta property="og:title" content="Breast Cancer Detection — coursework, honestly reported">
+<meta property="og:description" content="Baseline CNN to fine-tuned VGG16 on CBIS-DDSM mammography. AUC 0.77 on 714 held-out scans — below the literature target it aimed at, and the page says so. Includes a Grad-CAM explorer over the cases it got wrong.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Breast Cancer Detection — coursework, honestly reported">
+<meta name="twitter:description" content="AUC 0.77 on 714 held-out mammograms, with a Grad-CAM explorer over the errors as well as the successes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  /* no scroll-behavior:smooth on <html> — it turns a deep link on cold load into a
+     slow animated scroll that gets interrupted by images loading, landing short. */
+  @media (prefers-reduced-motion: no-preference){ nav a[href^='#'] { scroll-behavior:smooth; } }
+  :root {
+    --bg:#08080a; --panel:#0d0d10; --line:#1e1e24; --line2:#2a2a32;
+    --acc:#c6f24e; --acc-dim:#6a8228; --ind:#6b5cff;
+    --ink:#f4f4ee; --mut:#8a8a94; --mut2:#5a5a64;
+    --warn:#f2a54e; --bad:#f0564e;
+  }
+  body { background:var(--bg); color:var(--ink); font-family:'Space Grotesk',sans-serif; overflow-x:hidden; }
+  ::selection { background:var(--acc); color:var(--bg); }
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:99; opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .mono { font-family:'JetBrains Mono',monospace; }
+
+  /* nav */
+  nav { position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
+    gap:12px; padding:14px 40px; border-bottom:1px solid var(--line); background:rgba(8,8,10,.85); backdrop-filter:blur(10px); }
+  nav .home { display:inline-flex; align-items:center; gap:.5em; font-family:'JetBrains Mono',monospace;
+    font-size:12px; text-decoration:none; color:var(--acc); border:1.5px solid var(--acc-dim);
+    padding:9px 14px; border-radius:999px; white-space:nowrap; transition:.16s; }
+  nav .home:hover, nav .home:focus-visible { background:var(--acc); color:var(--bg); border-color:var(--acc); }
+  nav .secs { display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; min-width:0; }
+  nav .secs::-webkit-scrollbar { display:none; }
+  nav .secs a { font-family:'JetBrains Mono',monospace; font-size:11.5px; text-decoration:none;
+    color:var(--mut); padding:9px 11px; border-radius:999px; white-space:nowrap; }
+  nav .secs a:hover { color:var(--ink); }
+  @media (max-width:860px){ nav { padding:12px 18px; } nav .secs { font-size:11px; } }
+
+  /* layout */
+  section { padding:76px 40px; max-width:1180px; margin:0 auto; }
+  @media (max-width:700px){ section { padding:54px 20px; } }
+  .eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.26em;
+    text-transform:uppercase; color:var(--acc); margin-bottom:14px; }
+  h2 { font-family:'Archivo Black',sans-serif; font-size:clamp(26px,4vw,42px); line-height:1.05;
+    text-transform:uppercase; letter-spacing:-.02em; margin-bottom:20px; }
+  h3 { font-size:19px; font-weight:700; margin:32px 0 10px; }
+  p { color:var(--mut); font-size:15.5px; line-height:1.75; max-width:74ch; margin-bottom:16px; }
+  p b, p strong { color:var(--ink); font-weight:600; }
+  a.inl { color:var(--acc); }
+
+  /* hero */
+  header.hero { padding:70px 40px 54px; max-width:1180px; margin:0 auto; }
+  @media (max-width:700px){ header.hero { padding:44px 20px 36px; } }
+  header.hero h1 { font-family:'Archivo Black',sans-serif; font-size:clamp(38px,7.5vw,86px);
+    line-height:.92; letter-spacing:-.03em; text-transform:uppercase; margin-bottom:24px; }
+  .lede { font-size:clamp(17px,2.1vw,22px); line-height:1.5; color:var(--ink); font-weight:500; max-width:60ch; }
+  .badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:26px; }
+  .badge { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.12em;
+    padding:7px 12px; border-radius:5px; border:1px dashed var(--line2); color:var(--mut); }
+  .badge.hot { border:1px solid var(--acc-dim); background:#151a07; color:var(--acc); border-style:solid; }
+
+  /* stat row */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:40px; }
+  @media (max-width:820px){ .stats { grid-template-columns:1fr 1fr; } }
+  .stat { border:1px solid var(--line2); border-radius:13px; padding:18px; background:var(--panel); }
+  .stat .n { font-family:'Archivo Black',sans-serif; font-size:30px; color:var(--acc); letter-spacing:-.02em; }
+  .stat .l { font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--mut); margin-top:6px; line-height:1.6; }
+
+  /* callouts */
+  /* Paragraphs are capped at 74ch for readability, so callouts and figures are capped to
+     match — otherwise the column has two different right edges and reads as unresolved. */
+  .call { border:1px solid var(--line2); border-left:4px solid var(--acc); border-radius:0 14px 14px 0;
+    padding:22px 26px; background:var(--panel); margin:26px 0;
+    max-width:74ch; font-size:15.5px; }
+  .call.warn { border-left-color:var(--warn); }
+  .call h4 { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--acc); margin-bottom:10px; }
+  .call.warn h4 { color:var(--warn); }
+  .call p:last-child { margin-bottom:0; }
+
+  /* figure plates — matplotlib exports keep their white ground deliberately */
+  figure { margin:26px 0; }
+  figure .plate { background:#fbfbf8; border-radius:12px; padding:14px; border:1px solid var(--line2); }
+  figure .plate.tall img { width:100%; max-width:480px; margin-inline:auto; }
+  figure .plate.mid img  { width:100%; max-width:660px; margin-inline:auto; }
+  figcaption a { display:inline-block; color:var(--acc); text-decoration:none;
+    border:1px solid var(--acc-dim); border-radius:999px; padding:7px 12px; margin-top:6px; }
+  figcaption a:hover, figcaption a:focus-visible { background:var(--acc); color:var(--bg); border-color:var(--acc); }
+  figcaption a:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+  figure img { display:block; width:100%; height:auto; border-radius:4px; }
+  figcaption { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut2);
+    margin-top:10px; line-height:1.7; }
+
+  /* pipeline ladder */
+  .ladder { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:26px 0; }
+  .rung { border:1px solid var(--line2); border-radius:13px; padding:18px; background:var(--panel); }
+  .rung .k { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--mut2); letter-spacing:.14em; }
+  .rung .t { font-weight:700; font-size:15px; margin:8px 0 8px; }
+  .rung .v { font-family:'JetBrains Mono',monospace; font-size:19px; color:var(--acc); }
+  .rung .d { font-size:12.5px; color:var(--mut); line-height:1.6; margin-top:8px; }
+  .rung.best { border-color:var(--acc-dim); background:#12160a; }
+
+  /* grad-cam explorer */
+  .gc { display:grid; grid-template-columns:300px 1fr; gap:22px; margin-top:26px; }
+  @media (max-width:900px){ .gc { grid-template-columns:1fr; } }
+  .gc-list { display:flex; flex-direction:column; gap:8px; }
+  .gc-btn { display:flex; align-items:center; gap:12px; text-align:left; cursor:pointer;
+    border:1px solid var(--line2); border-radius:11px; padding:11px 13px; background:var(--panel);
+    color:var(--ink); font-family:inherit; transition:.15s; }
+  .gc-btn:hover { border-color:var(--mut2); }
+  .gc-btn[aria-pressed="true"] { border-color:var(--acc); background:#12160a; }
+  .gc-btn:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+  .gc-btn img { width:44px; height:44px; border-radius:7px; object-fit:cover; flex:none; }
+  .gc-btn > span { display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .gc-btn .m { display:block; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--mut); }
+  .gc-btn .s { display:block; font-size:13px; font-weight:600; }
+  .gc-btn .s.no { color:var(--bad); }
+  .gc-btn .s.yes { color:var(--acc); }
+
+  .gc-stage { border:1px solid var(--line2); border-radius:14px; background:var(--panel); padding:20px; }
+  .gc-views { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+  .gc-views button { font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em;
+    padding:9px 14px; border-radius:999px; border:1px solid var(--line2); background:transparent;
+    color:var(--mut); cursor:pointer; transition:.15s; }
+  .gc-views button[aria-pressed="true"] { background:var(--acc); border-color:var(--acc); color:var(--bg); }
+  .gc-views button:disabled { opacity:.32; cursor:not-allowed; }
+  .gc-views button:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+  .gc-img { position:relative; width:100%; max-width:420px; aspect-ratio:1; margin:0 auto;
+    border-radius:10px; overflow:hidden; background:#0a0a0c; }
+  .gc-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .gc-meta { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px; }
+  @media (max-width:560px){ .gc-meta { grid-template-columns:1fr; } }
+  .gc-meta div { border:1px solid var(--line); border-radius:9px; padding:11px 13px; }
+  .gc-meta .k { font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--mut2); letter-spacing:.14em; }
+  .gc-meta .v { font-size:15px; font-weight:600; margin-top:4px; }
+  .gc-note { font-size:14px; color:var(--mut); line-height:1.7; margin-top:14px; }
+
+  /* threshold bar */
+  .thr { margin-top:14px; }
+  .thr-track { position:relative; height:26px; border-radius:999px; background:linear-gradient(90deg,#16220c,#2a1410);
+    border:1px solid var(--line2); overflow:hidden; }
+  .thr-mid { position:absolute; left:50%; top:0; bottom:0; width:2px; background:var(--mut); opacity:.7; }
+  .thr-dot { position:absolute; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
+    background:var(--acc); border:2px solid var(--bg); transition:left .3s ease; }
+  .thr-lbl { display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace;
+    font-size:9.5px; color:var(--mut2); margin-top:7px; }
+
+  table.m { width:100%; border-collapse:collapse; margin:22px 0; font-size:14px; }
+  table.m th, table.m td { text-align:left; padding:11px 12px; border-bottom:1px solid var(--line); }
+  table.m th { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--mut2); }
+  table.m td { color:var(--mut); }
+  table.m td.hi { color:var(--acc); font-family:'JetBrains Mono',monospace; }
+  table.m tr.best td { background:#10140a; }
+
+  footer { border-top:1px solid var(--line); padding:54px 40px; margin-top:60px; }
+  .fin { max-width:1180px; margin:0 auto; }
+  .fin .links { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:22px; }
+  .fin a { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--mut);
+    text-decoration:none; border:1px solid var(--line2); padding:11px 15px; border-radius:999px; }
+  .fin a:hover { color:var(--bg); background:var(--acc); border-color:var(--acc); }
+  .fine { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--mut2); }
+  @media (max-width:700px){ footer { padding:40px 20px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="home" href="/"><span aria-hidden="true">&larr;</span> Peter&nbsp;Kautwima</a>
+  <div class="secs">
+    <a href="#what">What it is</a><a href="#data">Data</a><a href="#pipeline">Pipeline</a>
+    <a href="#results">Results</a><a href="#failed">What failed</a><a href="#gradcam">Where it looked</a>
+    <a href="#limits">Limits</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">University of London CM3070 · deep learning · coursework</div>
+  <h1>Breast Cancer<br>Detection</h1>
+  <p class="lede">A four-stage CNN pipeline classifying mammograms as benign or malignant —
+    and an honest account of a project that <b>missed the benchmark it set itself</b>.</p>
+  <div class="badges">
+    <span class="badge hot">UNIVERSITY COURSEWORK · GRADED 74%</span>
+    <span class="badge">NOT A CLINICAL TOOL</span>
+    <span class="badge">NOT STATE OF THE ART</span>
+    <span class="badge">PUBLIC DATASET · CBIS-DDSM</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n">0.77</div><div class="l">AUC on held-out test — the headline number</div></div>
+    <div class="stat"><div class="n">714</div><div class="l">held-out scans, never seen in training</div></div>
+    <div class="stat"><div class="n">0.71</div><div class="l">sensitivity — ~85 of 292 cancers missed</div></div>
+    <div class="stat"><div class="n">0.844</div><div class="l">the literature target it aimed at, and did not reach</div></div>
+  </div>
+</header>
+
+<section id="what">
+  <div class="eyebrow">01 / the honest version</div>
+  <h2>What this is,<br>and what it isn't</h2>
+  <p>This is <b>university coursework</b>. A convolutional neural network trained on a public
+    mammography dataset, built to learn the deep-learning workflow end to end. It is
+    <b>not a diagnostic tool</b>, it has never been near a patient, and it is not close to
+    state of the art.</p>
+  <p>It set out to match a published benchmark — <b>AUC 0.844</b> from Falconí et al. on the same
+    dataset — and reached <b>0.77</b>. That gap is the most interesting thing on this page, so
+    it is stated up front rather than buried.</p>
+  <p>The project was <b>marked 74%</b>. Worth noting only because of what it says about how
+    this kind of work is judged: the mark reflects method, iteration and reporting, not
+    whether the number came out where I wanted it.</p>
+  <div class="call">
+    <h4>Why show a project that missed its target</h4>
+    <p>Because the method was sound and the reporting is honest, and those are the things
+      that transfer. The pipeline was built in deliberate stages with each change measured
+      against the last, one promising technique made results <em>worse</em> and was kept in
+      the record, and the model's attention was inspected rather than trusted. A tidier
+      number would say less.</p>
+  </div>
+</section>
+
+<section id="data">
+  <div class="eyebrow">02 / the data</div>
+  <h2>CBIS-DDSM</h2>
+  <p>The Curated Breast Imaging Subset of DDSM — a public, de-identified set of screening
+    mammograms with pathology-confirmed labels. <b>3,567 images</b> were loaded and split
+    <b>2,282 train / 571 validation / 714 test</b>, stratified so class balance holds across
+    all three.</p>
+  <p>The classes are uneven — roughly <b>59% benign to 41% malignant</b> — so training used
+    class weights, and accuracy was rejected as a headline metric from the start. A model
+    that called every scan benign would score 59% accuracy while catching no cancer at all.</p>
+  <figure>
+    <div class="plate"><img src="/assets/img/cancer/class-dist.webp" alt="Bar chart of benign versus malignant image counts in the CBIS-DDSM subset" width="1200" height="418" style="aspect-ratio:1200/418" loading="lazy" decoding="async"></div>
+    <figcaption>Class distribution across the loaded dataset.</figcaption>
+  </figure>
+  <figure>
+    <div class="plate tall"><img src="/assets/img/cancer/data-pipeline.webp" alt="Diagram of the data preparation pipeline from raw DICOM through resizing and augmentation" width="1100" height="1821" style="aspect-ratio:1100/1821" loading="lazy" decoding="async"></div>
+    <figcaption>Preparation: decode, resize to 224×224 for VGG16, normalise, augment. <a href="/assets/img/cancer/data-pipeline.webp" target="_blank" rel="noopener">open full size ↗</a></figcaption>
+  </figure>
+</section>
+
+<section id="pipeline">
+  <div class="eyebrow">03 / method</div>
+  <h2>Four stages,<br>each measured</h2>
+  <p>Rather than reaching for the largest available model, the pipeline was built in rungs —
+    each one a single change from the rung below, so any movement in the score could be
+    attributed to something specific.</p>
+
+  <div class="ladder">
+    <div class="rung">
+      <div class="k">STAGE 01</div><div class="t">Baseline CNN</div>
+      <div class="d">A small convolutional network trained from scratch. Establishes the floor and
+        proves the data pipeline works before any transfer learning is involved.</div>
+    </div>
+    <div class="rung">
+      <div class="k">STAGE 02</div><div class="t">VGG16, frozen</div>
+      <div class="d">ImageNet weights held fixed, a new classifier head trained on top. Tests
+        whether generic visual features transfer to mammography at all.</div>
+    </div>
+    <div class="rung">
+      <div class="k">STAGE 03</div><div class="t">+ regularisation</div>
+      <div class="d">Dropout and L2 added after the frozen model overfit — training accuracy
+        climbing while validation stalled.</div>
+    </div>
+    <div class="rung best">
+      <div class="k">STAGE 04 · BEST</div><div class="t">VGG16, fine-tuned</div>
+      <div class="v">AUC 0.768</div>
+      <div class="d">Blocks 4 and 5 unfrozen at a low learning rate, so the later, more
+        task-specific filters adapt to tissue.</div>
+    </div>
+  </div>
+
+  <p>Three further techniques were tried on top: an <b>ensemble</b> of the strongest models
+    (AUC 0.774, the best overall result), <b>test-time augmentation</b>, and <b>CLAHE</b>
+    contrast enhancement. Only the ensemble helped meaningfully.</p>
+
+  <figure>
+    <div class="plate tall"><img src="/assets/img/cancer/vgg16-arch.webp" alt="Diagram of the VGG16 architecture with the fine-tuned blocks highlighted" width="1400" height="1370" style="aspect-ratio:1400/1370" loading="lazy" decoding="async"></div>
+    <figcaption>VGG16, with the blocks unfrozen during fine-tuning. <a href="/assets/img/cancer/vgg16-arch.webp" target="_blank" rel="noopener">open full size ↗</a></figcaption>
+  </figure>
+  <figure>
+    <div class="plate"><img src="/assets/img/cancer/train-finetuned.webp" alt="Training and validation curves for the fine-tuned VGG16 model" width="1400" height="489" style="aspect-ratio:1400/489" loading="lazy" decoding="async"></div>
+    <figcaption>Training and validation curves for the fine-tuned model.</figcaption>
+  </figure>
+</section>
+
+<section id="results">
+  <div class="eyebrow">04 / results</div>
+  <h2>0.77, and what<br>that means</h2>
+
+  <div class="call">
+    <h4>AUC in one sentence</h4>
+    <p>Take one real cancer scan and one real benign scan at random: <b>AUC is the probability
+      the model gives the cancer the higher malignant score.</b> At 0.77 it gets that ordering
+      right roughly 77 times in 100. A coin flip is 0.50. It is the headline metric here
+      precisely because it needs no threshold — unlike accuracy, it cannot be flattered by
+      the majority class.</p>
+  </div>
+
+  <table class="m">
+    <thead><tr><th>Model</th><th>AUC</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline CNN</td><td class="hi">—</td><td>Floor: proves the pipeline, not the science</td></tr>
+      <tr><td>VGG16 frozen</td><td class="hi">—</td><td>Generic features transfer, but overfit quickly</td></tr>
+      <tr><td>VGG16 + regularisation</td><td class="hi">—</td><td>Overfitting controlled</td></tr>
+      <tr class="best"><td>VGG16 fine-tuned</td><td class="hi">0.768</td><td>Best single model · sensitivity 0.71</td></tr>
+      <tr class="best"><td>Ensemble</td><td class="hi">0.774</td><td>Best overall</td></tr>
+      <tr><td>Literature target (Falconí et al.)</td><td class="hi">0.844</td><td><b>Not reached</b></td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="plate mid"><img src="/assets/img/cancer/roc-compare.webp" alt="ROC curves comparing the models against each other" width="1400" height="1117" style="aspect-ratio:1400/1117" loading="lazy" decoding="async"></div>
+    <figcaption>ROC across the pipeline. The curve is the sensitivity / false-alarm tradeoff swept across every threshold; AUC is the area beneath it.</figcaption>
+  </figure>
+  <figure>
+    <div class="plate"><img src="/assets/img/cancer/metrics.webp" alt="Bar chart comparing accuracy, precision, recall and F1 across experiments" width="1400" height="384" style="aspect-ratio:1400/384" loading="lazy" decoding="async"></div>
+    <figcaption>Metric comparison across experiments.</figcaption>
+  </figure>
+
+  <h3>Why sensitivity matters more than accuracy here</h3>
+  <p>Sensitivity is the share of real cancers the model catches. At <b>0.71</b>, roughly
+    <b>85 of the 292 malignant scans</b> in the test set were called benign. In screening,
+    that error costs far more than a false alarm: a false positive leads to another look,
+    a false negative leads to nothing at all. Any honest reading of this project leads with
+    that number, not with accuracy.</p>
+</section>
+
+<section id="failed">
+  <div class="eyebrow">05 / the negative result</div>
+  <h2>CLAHE made it<br>worse</h2>
+  <p>Contrast Limited Adaptive Histogram Equalisation is a standard preprocessing step in
+    medical imaging — it boosts local contrast and, in principle, should make lesion
+    boundaries easier for a network to find. It is widely used and it was a reasonable thing
+    to try.</p>
+  <p>It <b>reduced</b> performance here. Both the CLAHE-only and CLAHE-plus-augmentation runs
+    scored below the equivalent runs without it.</p>
+  <div class="call warn">
+    <h4>Kept, not quietly dropped</h4>
+    <p>The experiment stays in the record because a technique that should have worked and
+      didn't is a real finding about this data. The plausible reading is that aggressive local
+      contrast enhancement amplified noise and acquisition artifacts alongside tissue detail —
+      but that was not tested, so it is offered as a hypothesis and not a conclusion.</p>
+  </div>
+</section>
+
+<section id="gradcam">
+  <div class="eyebrow">06 / explainability</div>
+  <h2>Where the<br>model looked</h2>
+  <p>Grad-CAM answers one question: <b>which parts of the image drove the prediction?</b> Red
+    is where the model looked hardest. It is the difference between a model that learned
+    something anatomical and one that found a shortcut — and it is the only reason the flaw
+    in the limitations section below was ever noticed.</p>
+  <p class="mono" style="font-size:12px;color:var(--mut2)">Pick a case. Confidence is shown throughout as
+    <b style="color:var(--mut)">P(malignant)</b>; the decision threshold is 50%.</p>
+
+  <div class="gc">
+    <div class="gc-list" id="gcList" role="group" aria-label="Choose a case"></div>
+    <div class="gc-stage">
+      <div class="gc-views" id="gcViews">
+        <button type="button" data-v="original" aria-pressed="false">the scan</button>
+        <button type="button" data-v="heatmap"  aria-pressed="false">where it looked</button>
+        <button type="button" data-v="overlay"  aria-pressed="true">both</button>
+      </div>
+      <div class="gc-img"><img id="gcImg" src="/assets/img/cancer/tp-76-overlay.webp" alt=""></div>
+      <div class="gc-meta">
+        <div><div class="k">TRUTH</div><div class="v" id="gcTruth">—</div></div>
+        <div><div class="k">MODEL SAID</div><div class="v" id="gcPred">—</div></div>
+        <div><div class="k">P(MALIGNANT)</div><div class="v" id="gcP">—</div></div>
+      </div>
+      <div class="thr">
+        <div class="thr-track"><div class="thr-mid"></div><div class="thr-dot" id="gcDot"></div></div>
+        <div class="thr-lbl"><span>0% · certainly benign</span><span>50% · threshold</span><span>certainly malignant · 100%</span></div>
+      </div>
+      <p class="gc-note" id="gcNote"></p>
+    </div>
+  </div>
+
+  <div class="call" style="margin-top:30px">
+    <h4>The most instructive case is the one it got wrong</h4>
+    <p><b>fp-52</b> is a benign scan the model called malignant — at 52.4% against a 50%
+      threshold. It was 2.4 points from undecided, and the threshold made the call on its
+      behalf. In a confusion matrix that case counts exactly the same as a confident blunder,
+      because turning a probability into a label throws the probability away. That is the
+      clearest argument on this page for reporting AUC rather than accuracy.</p>
+  </div>
+
+  <figure>
+    <div class="plate"><img src="/assets/img/cancer/failure.webp" alt="Failure analysis chart showing the distribution of model errors" width="1400" height="488" style="aspect-ratio:1400/488" loading="lazy" decoding="async"></div>
+    <figcaption>Failure analysis across the held-out set.</figcaption>
+  </figure>
+</section>
+
+<section id="limits">
+  <div class="eyebrow">07 / limitations &amp; ethics</div>
+  <h2>What this<br>cannot do</h2>
+  <p>This model must not be used to make any decision about a person. It is coursework
+    trained on a public research dataset, evaluated once on a held-out split, and never
+    validated on an external population, a different scanner, or a different clinic.
+    <b>Performance is well below clinical grade.</b></p>
+  <p>CBIS-DDSM carries the biases of its origin — a curated research collection drawn from a
+    specific population and imaging era. A model trained on it should not be assumed to
+    behave the same way on scans from anywhere else. No demographic breakdown of performance
+    was performed, so any claim about fairness across groups would be unsupported.</p>
+
+  <div class="call warn">
+    <h4>A defect found after submission</h4>
+    <p>While preparing these figures, two of the sample images turned out not to be
+      mammograms at all, but <b>ROI masks</b> — the outline a radiologist drew around a lesion.
+      The cause is in the data loader: it resolves each record to a folder and takes the first
+      file in it, and in this dataset that folder holds both the cropped scan and its mask.
+      In a sample of ten images, <b>two were masks</b>.</p>
+    <p>The exact contamination rate across the full set has not yet been measured, and the
+      fix and re-run are scheduled. It is reported here because it is a plausible contributor
+      to the gap between this project's 0.77 and the 0.844 it aimed at — and because every
+      metric looked healthy while it was happening. Only the attention maps gave it away.</p>
+  </div>
+
+  <h3>What I would do next</h3>
+  <p>Fix the loader so the file is resolved by name rather than position, measure the true
+    contamination rate, and re-run the identical protocol so the comparison against 0.768 is
+    fair. Then add a sample-grid assertion at the front of the pipeline so this class of bug
+    cannot recur silently. If the number moves, the gap is explained; if it does not, a
+    confound has been eliminated and the honest conclusion stands more firmly.</p>
+</section>
+
+<footer>
+  <div class="fin">
+    <div class="links">
+      <a href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification" target="_blank" rel="noopener">Repository ↗</a>
+      <a href="/">← Back to the portfolio</a>
+    </div>
+    <div class="fine">University of London CM3070 Final Project · CBIS-DDSM · not a diagnostic tool</div>
+  </div>
+</footer>
+
+<script>
+const CASES = [
+ {id:"tp-76", truth:"Malignant", pred:"MALIGNANT", p:76.2, ok:true,  views:3, note:"Caught it. The attention sits on dense tissue structure — this is what a model looking at something anatomical looks like."},
+ {id:"tp-88", truth:"Malignant", pred:"MALIGNANT", p:88.0, ok:true,  views:1, note:"The most confident correct call in the set."},
+ {id:"tp-68", truth:"Malignant", pred:"MALIGNANT", p:68.0, ok:true,  views:1, note:"Correct, but a long way from certain."},
+ {id:"tp-61", truth:"Malignant", pred:"MALIGNANT", p:61.0, ok:true,  views:1, note:"Correct by 11 points. A few points lower and this becomes a missed cancer."},
+ {id:"tn-25", truth:"Benign",    pred:"BENIGN",    p:25.1, ok:true,  views:3, note:"Correctly cleared. The blocky heatmap is normal, not a defect — Grad-CAM is computed on a 14×14 layer and stretched to 224×224, so it always has square edges."},
+ {id:"tn-26", truth:"Benign",    pred:"BENIGN",    p:26.0, ok:true,  views:1, note:"Correctly cleared."},
+ {id:"fp-52", truth:"Benign",    pred:"MALIGNANT", p:52.4, ok:false, views:3, note:"A false alarm, and a coin flip — 52.4% against a 50% threshold. The model was 2.4 points from undecided and the threshold decided for it."},
+ {id:"fn-22", truth:"Malignant", pred:"BENIGN",    p:21.7, ok:false, views:3, note:"A missed cancer. It found a real structure and still called it benign. This is the expensive error in screening, and the one sensitivity measures."}
+];
+const V = ['original','heatmap','overlay'];
+let cur = CASES[0], view = 'overlay';
+
+const list  = document.getElementById('gcList');
+const img   = document.getElementById('gcImg');
+const views = document.getElementById('gcViews');
+
+CASES.forEach(c => {
+  const b = document.createElement('button');
+  b.type='button'; b.className='gc-btn'; b.dataset.id=c.id;
+  b.setAttribute('aria-pressed', String(c===cur));
+  b.innerHTML = '<img src="/assets/img/cancer/'+c.id+'-overlay.webp" alt="" loading="lazy">'
+    + '<span><span class="m">'+c.truth.toLowerCase()+' · P(mal) '+c.p.toFixed(1)+'%</span>'
+    + '<span class="s '+(c.ok?'yes':'no')+'">'+(c.ok?'correct':'WRONG')+' — '+c.pred.toLowerCase()+'</span></span>';
+  b.addEventListener('click', ()=>select(c));
+  list.appendChild(b);
+});
+
+function select(c){
+  cur = c;
+  // a case without all three exports falls back to the one view it has
+  if (cur.views === 1) view = 'overlay';
+  render();
+}
+views.querySelectorAll('button').forEach(b=>{
+  b.addEventListener('click', ()=>{ if(!b.disabled){ view=b.dataset.v; render(); } });
+});
+
+function render(){
+  img.src = '/assets/img/cancer/'+cur.id+'-'+view+'.webp';
+  img.alt = 'Case '+cur.id+', '+({original:'the mammogram',heatmap:'the Grad-CAM heatmap',overlay:'heatmap over the mammogram'})[view];
+  document.getElementById('gcTruth').textContent = cur.truth;
+  const pred = document.getElementById('gcPred');
+  pred.textContent = cur.pred;
+  pred.style.color = cur.ok ? 'var(--acc)' : 'var(--bad)';
+  document.getElementById('gcP').textContent = cur.p.toFixed(1)+'%';
+  document.getElementById('gcDot').style.left = cur.p+'%';
+  document.getElementById('gcNote').textContent = cur.note;
+  list.querySelectorAll('.gc-btn').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.id===cur.id)));
+  views.querySelectorAll('button').forEach(b=>{
+    const only = cur.views===1;
+    b.disabled = only && b.dataset.v!=='overlay';
+    b.setAttribute('aria-pressed', String(b.dataset.v===view));
+    b.title = b.disabled ? 'Only the blended view was exported for this case' : '';
+  });
+}
+render();
+</script>
+</body>
+</html>

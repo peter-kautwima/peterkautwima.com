@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peter Kautwima — CV</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Georgia,serif;font-size:13px;line-height:1.55;color:#1a1a1a;background:#f5f5f0}
+  .tabs{display:flex;background:#fff;border-bottom:2px solid #1a1a1a;position:sticky;top:0;z-index:100}
+  .tab{padding:10px 22px;font-size:12px;font-family:Arial,sans-serif;cursor:pointer;border:none;background:transparent;color:#666;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+  .tab:hover{color:#1a1a1a}
+  .tab.active{color:#1a1a1a;font-weight:bold;border-bottom:3px solid #1a1a1a}
+  .panel{display:none}
+  .panel.active{display:block}
+
+  #cv-panel{background:#f5f5f0;padding:32px 16px}
+  .page{background:#fff;max-width:760px;margin:0 auto;padding:36px 52px;box-shadow:0 2px 16px rgba(0,0,0,0.1)}
+
+  .cv-name{font-size:28px;font-weight:bold;font-family:Arial,sans-serif;letter-spacing:-0.5px;color:#1a1a1a}
+  .cv-title{font-size:13px;color:#555;font-family:Arial,sans-serif;margin-top:3px;letter-spacing:0.3px}
+  .cv-contact{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:8px;font-size:11px;color:#555;font-family:Arial,sans-serif}
+  .cv-contact a{color:#555;text-decoration:none}
+  .cv-contact a:hover{text-decoration:underline}
+  .header-line{border-top:2.5px solid #1a1a1a;margin:14px 0 18px}
+
+  .sec-title{font-size:10px;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#888;border-bottom:0.5px solid #ddd;padding-bottom:4px;margin:0 0 12px}
+  .section{margin-bottom:15px}
+  .profile-p{font-size:12.5px;line-height:1.65;color:#222}
+
+  .featured{border-left:3px solid #1a1a1a;padding:10px 14px;background:#fafafa;margin-bottom:15px}
+  .feat-title{font-weight:bold;font-size:13px;font-family:Arial,sans-serif;color:#1a1a1a}
+  .feat-sub{font-size:11px;color:#666;font-family:Arial,sans-serif;margin:2px 0 6px}
+  .featured ul{padding-left:16px}
+  .featured li{font-size:11.5px;line-height:1.6;margin-bottom:4px;color:#222}
+
+  .job{margin-bottom:11px}
+  .jrow{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px}
+  .jtitle{font-weight:bold;font-size:13px;font-family:Arial,sans-serif;color:#1a1a1a}
+  .jdate{font-size:11px;color:#777;font-family:Arial,sans-serif;white-space:nowrap}
+  .jco{font-size:11.5px;color:#555;font-family:Arial,sans-serif;margin:2px 0 5px}
+  .job ul{padding-left:16px;margin-top:4px}
+  .job li{font-size:12px;line-height:1.6;margin-bottom:4px;color:#222}
+  .stack{font-size:10.5px;color:#888;margin-top:5px;font-style:italic;font-family:Arial,sans-serif}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+  .sg{margin-bottom:10px}
+  .sl{font-size:10px;font-family:Arial,sans-serif;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:3px}
+  .si{font-size:11.5px;color:#222;line-height:1.65}
+
+  .erow{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px;margin-bottom:5px}
+  .edeg{font-size:12.5px;font-weight:normal;font-family:Arial,sans-serif;color:#444}
+  .edeg.primary{font-weight:bold;color:#1a1a1a}
+  .esch{font-size:11px;color:#666;font-family:Arial,sans-serif}
+  .enote{font-size:10.5px;color:#555;margin-top:2px;font-family:Arial,sans-serif}
+  .edate{font-size:11px;color:#777;font-family:Arial,sans-serif;white-space:nowrap}
+
+  .pb{border-top:0.5px dashed #ccc;margin:14px 0}
+  .print-btn{display:block;margin:18px auto 0;padding:10px 28px;background:#1a1a1a;color:#fff;border:none;font-family:Arial,sans-serif;font-size:12px;cursor:pointer;border-radius:3px}
+  .print-btn:hover{background:#333}
+
+  @media print{
+    body{background:#fff}
+    #cv-panel{background:#fff;padding:0}
+    .page{box-shadow:none;padding:0;max-width:100%}
+    .tabs,.print-btn{display:none}
+    .pb{display:none}
+    @page{margin:1.8cm 1.8cm;size:A4}
+  }
+
+  #li-panel,#txt-panel{background:#fff;max-width:760px;margin:0 auto;padding:32px 40px}
+  .li-section{margin-bottom:28px}
+  .li-heading{font-size:13px;font-weight:bold;font-family:Arial,sans-serif;color:#0a66c2;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #e0e0e0}
+  .li-label{font-size:10px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;font-family:Arial,sans-serif;margin-bottom:4px}
+  .li-content{font-size:13px;line-height:1.7;color:#222;white-space:pre-wrap;font-family:Arial,sans-serif}
+  .copy-btn{margin-top:8px;padding:6px 16px;font-size:11px;font-family:Arial,sans-serif;background:#fff;border:1px solid #ccc;cursor:pointer;border-radius:3px;color:#444}
+  .copy-btn:hover{background:#f5f5f5}
+  .copy-btn.copied{background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32}
+  textarea.txt-box{width:100%;font-family:'Courier New',monospace;font-size:11.5px;line-height:1.6;color:#222;border:1px solid #ddd;padding:16px;resize:vertical;background:#fafafa}
+  .txt-label{font-size:10px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;color:#aaa;font-family:Arial,sans-serif;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('cv',this)">CV (Print / PDF)</button>
+  <button class="tab" onclick="show('li',this)">LinkedIn Text</button>
+  <button class="tab" onclick="show('txt',this)">Plain Text / Markdown</button>
+</div>
+
+<!-- ===== CV ===== -->
+<div id="cv-panel" class="panel active">
+<div class="page">
+
+  <div class="cv-name">Peter Kautwima</div>
+  <div class="cv-title">Software Engineer — Frontend &amp; Machine Learning / AI</div>
+  <div class="cv-contact">
+    <span>kautwima@gmail.com</span>
+    <span>Cape Town, South Africa</span>
+    <span><a href="https://github.com/peter-kautwima">github.com/peter-kautwima</a></span>
+    <span><a href="https://www.linkedin.com/in/peter-kautwima/">linkedin.com/in/peter-kautwima</a></span>
+  </div>
+  <div class="header-line"></div>
+
+  <div class="section">
+    <div class="sec-title">Profile</div>
+    <p class="profile-p">Software Engineer with five years of professional experience — including three years delivering production frontend systems across 11 brands at a FTSE40 company — and a BSc in Machine Learning &amp; AI graduating 2026. The combination of deep frontend expertise and hands-on ML/AI knowledge positions me for roles building intelligent, AI-powered products where both skill sets are used together. Early adopter of AI-assisted development (GitHub Copilot in production since 2024; working with AI models since 2022). Based in Cape Town, UTC+2 — fully aligned with UK and EU working hours. Open to remote Senior or Intermediate Software Engineering roles, and ML/AI engineering roles at companies building intelligent products.</p>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Featured Project</div>
+    <div class="featured">
+      <div class="feat-title">Deep Learning Breast Cancer Classification — CM3070 Final Project, University of London (2026)</div>
+      <div class="feat-sub"><a href="https://github.com/peter-kautwima/DeepLearning-BreastCancer-Classification" style="color:#666">github.com/peter-kautwima/DeepLearning-BreastCancer-Classification</a></div>
+      <ul>
+        <li>Built an end-to-end deep learning pipeline for malignant/benign mammogram classification on the CBIS-DDSM clinical dataset (~3,500 biopsy-verified ROI patches).</li>
+        <li>Four-stage iterative pipeline: Baseline CNN → Frozen VGG16 → Regularisation (Dropout + L2) → Fine-tuning. Best model: <strong>AUC 0.7678, sensitivity 0.7055</strong> on 714 held-out images — 64% relative sensitivity gain over baseline, exceeding mean individual radiologist AUC (McKinney et al. 2020).</li>
+        <li>Implemented Grad-CAM explainability via a custom GradientTape workaround for a Keras 3 graph disconnection issue — heatmaps for all four prediction categories (TP, TN, FP, FN).</li>
+        <li>Fully reproducible on a public dataset with stratified splits, class-imbalance weighting, and training-only augmentation.</li>
+      </ul>
+      <div class="stack">Python · TensorFlow/Keras · Jupyter Notebooks · NumPy · Pandas · Scikit-learn · Matplotlib · pydicom · Google Colab (T4 / A100 GPU)</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Experience</div>
+
+    <div class="job">
+      <div class="jrow"><span class="jtitle">Intermediate Software Engineer — The Rank Group</span><span class="jdate">Dec 2022 – Feb 2026</span></div>
+      <div class="jco">FTSE40 international gaming &amp; entertainment · ~5,000 employees globally · Cape Town office scaled from ~50 to ~150 — enterprise backing with a startup-scale team</div>
+      <ul>
+        <li>Delivered frontend across a multi-brand unification initiative consolidating ~11 brands — including Mecca Bingo and Grosvenor Casino — onto a single Umbraco CMS, reducing per-brand maintenance overhead and enabling consistent feature rollout. Core engineering team of ~10.</li>
+        <li><strong>Jackpot Carousel:</strong> Built a real-time jackpot carousel aggregating live data from multiple providers. Designed a Cloudflare Worker to poll and cache jackpot values at near-real-time frequency; built a Remix service layer to push live updates to the UI with smooth animations. Solved multi-provider data normalisation, polling architecture, and cache invalidation under production traffic. Live on Mecca Bingo and Grosvenor Casino.</li>
+        <li>Delivered a redesigned registration flow across multiple brands, improving conversion and onboarding UX.</li>
+        <li>Built and maintained a shared Storybook component library ensuring design consistency across the full brand estate.</li>
+      </ul>
+      <div class="stack">TypeScript · React · Remix · GraphQL · Tailwind CSS · Storybook · Umbraco CMS · Cloudflare Workers · Git</div>
+    </div>
+
+    <div class="job">
+      <div class="jrow"><span class="jtitle">Frontend Developer — Bertha Centre, UCT Graduate School of Business</span><span class="jdate">Jul 2022 – Mar 2023</span></div>
+      <div class="jco">Part-time retainer · Leading social innovation research hub</div>
+      <ul>
+        <li>Maintained and extended the public-facing web presence for the Bertha Centre.</li>
+      </ul>
+      <div class="stack">JavaScript · GatsbyJS · Tailwind CSS · Netlify CMS · Netlify</div>
+    </div>
+
+    <div class="job">
+      <div class="jrow"><span class="jtitle">Frontend Developer — reOS</span><span class="jdate">Jul 2021 – Oct 2022</span></div>
+      <div class="jco">PropTech startup · Property management platform · Joined as intern, promoted to full-time Junior after 4 months</div>
+      <ul>
+        <li>Built production features across the rental management platform: payment reconciliation tool, user invitation &amp; role permission workflows, file management, and dashboard statistics.</li>
+        <li>Bridged development and customer-facing operations teams; took on sprint PM functions and led QA follow-up on critical issues.</li>
+      </ul>
+      <div class="stack">TypeScript · React · Redux · RxJS · JavaScript · HTML · CSS/Sass · RESTful API</div>
+    </div>
+
+    <div class="job">
+      <div class="jrow"><span class="jtitle">Financial Director &amp; Head Booker — The Fantastic Agency</span><span class="jdate">Nov 2019 – Feb 2021</span></div>
+      <ul>
+        <li>Managed a portfolio of 250 models; oversaw financials, bank reconciliation, and booking operations. Revenue increased twofold over two years.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="jrow"><span class="jtitle">Freelance WordPress Developer</span><span class="jdate">2019</span></div>
+      <ul>
+        <li>Built tailored websites for small businesses across branding, UX, and functionality.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="jrow"><span class="jtitle">Founder — Supa Tutor &amp; Mathamagicians (PTY)</span><span class="jdate">May 2011 – Jun 2021</span></div>
+      <div class="jco">EdTech startup · Maths, English &amp; Coding · Operated across three continents · 10 years</div>
+      <ul>
+        <li>Founded and ran an EdTech research and tutoring platform for 10 years. Received an acquisition offer in 2015; chose to continue building. Developed an interactive learning platform in 2018 and piloted online courses at Summit House College.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pb"></div>
+
+  <div class="section">
+    <div class="sec-title">Technical Skills</div>
+    <div class="two-col">
+      <div>
+        <div class="sg"><div class="sl">Frontend (proficient)</div><div class="si">TypeScript · JavaScript · React · Redux · GraphQL · HTML · CSS/Sass · Tailwind CSS · Storybook · CSS Modules · Remix · GatsbyJS · RxJS</div></div>
+        <div class="sg"><div class="sl">Infrastructure &amp; tooling</div><div class="si">Cloudflare Workers · Netlify · Umbraco CMS · Git / GitHub · RESTful APIs</div></div>
+        <div class="sg"><div class="sl">AI tooling</div><div class="si">GitHub Copilot (production, ~2 yrs) · LLMs &amp; AI models since 2022 · Prompt engineering</div></div>
+      </div>
+      <div>
+        <div class="sg"><div class="sl">Machine learning / AI</div><div class="si">Python · TensorFlow/Keras · Transfer Learning · CNNs · Grad-CAM · NumPy · Pandas · Scikit-learn · Matplotlib · pydicom · Jupyter Notebooks · Google Colab</div></div>
+        <div class="sg"><div class="sl">Also used</div><div class="si">Node.js · SQL · Express.js · Next.js · Prisma · tRPC · Bootstrap · Jest · Cypress · C++</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Education</div>
+    <div class="erow">
+      <div>
+        <div class="edeg primary">BSc (Honours) Computer Science — Machine Learning &amp; Artificial Intelligence</div>
+        <div class="esch">University of London (Goldsmiths) · Graduating 2026</div>
+      </div>
+      <div class="edate">2021–2026</div>
+    </div>
+    <div class="erow">
+      <div><div class="edeg primary">Shaw Academy — Web Development, Web Design, Financial Trading &amp; Investment</div></div>
+      <div class="edate">2019</div>
+    </div>
+    <div class="erow">
+      <div><div class="edeg">Google IT Support Professional Certificate</div></div>
+      <div class="edate">2022</div>
+    </div>
+    <div class="erow">
+      <div><div class="edeg">University of Cape Town — 2nd year, Chartered Accounting &amp; Information Systems</div></div>
+      <div class="edate">2009–2010</div>
+    </div>
+    <div class="erow">
+      <div>
+        <div class="edeg">Camps Bay High School — Matriculated, 7th in grade</div>
+        <div class="enote"><strong>Deputy Head Prefect · 1st Team Tennis · 1st Team Squash</strong></div>
+      </div>
+      <div class="edate">2008</div>
+    </div>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<!-- ===== LINKEDIN ===== -->
+<div id="li-panel" class="panel">
+<div style="max-width:760px;margin:0 auto;padding:32px 40px">
+
+  <div class="li-section">
+    <div class="li-heading">Headline</div>
+    <div class="li-content" id="li-headline">Software Engineer (Frontend & ML/AI) | TypeScript · React · Python · TensorFlow | BSc Computer Science — Machine Learning & AI</div>
+    <button class="copy-btn" onclick="copyText('li-headline',this)">Copy</button>
+  </div>
+
+  <div class="li-section">
+    <div class="li-heading">About</div>
+    <div class="li-content" id="li-about">Software Engineer with five years of professional experience, based in Cape Town (UTC+2 — fully aligned with UK and EU hours). Open to remote Intermediate or Senior roles.
+
+Most recently I spent three years as an Intermediate Software Engineer at The Rank Group (FTSE40), delivering production frontend systems across 11 brands. My most significant technical contribution was building a real-time jackpot carousel — multi-provider data aggregation via a Cloudflare Worker polling layer and a Remix service, with animated live updates on Mecca Bingo and Grosvenor Casino.
+
+I've just completed a BSc (Honours) in Computer Science — Machine Learning & AI at the University of London (Goldsmiths, graduating 2026). My final project was an end-to-end deep learning breast cancer classification system — VGG16 transfer learning with Grad-CAM explainability on a clinical dataset — achieving AUC 0.7678 and exceeding the mean individual radiologist AUC benchmark in published literature.
+
+The combination of production frontend engineering and applied ML/AI knowledge is what I'm looking to put to work — ideally at a company building AI-powered products where both matter. I'm not a data scientist. I'm the engineer who understands how the models work and can build the product around them.
+
+I've been using GitHub Copilot in production for two years and working hands-on with AI models since 2022.
+
+Before engineering, I ran an EdTech startup for 10 years across three continents — which is where I developed the product instinct and high-ownership mindset I bring to every team.
+
+📍 Cape Town, South Africa · UTC+2 · Open to remote · Targeting UK / EU / US companies</div>
+    <button class="copy-btn" onclick="copyText('li-about',this)">Copy</button>
+  </div>
+
+  <div class="li-section">
+    <div class="li-heading">Rank Group — Experience bullets</div>
+    <div class="li-content" id="li-rank">Intermediate Software Engineer at The Rank Group — a FTSE40 international gaming and entertainment company (~5,000 employees globally). Joined the Cape Town office when it had ~50 people; it scaled to ~150 during my three years there — enterprise backing with a startup-scale team.
+
+• Delivered frontend across a multi-brand unification initiative consolidating ~11 brands (including Mecca Bingo and Grosvenor Casino) onto a single Umbraco CMS.
+• Built a real-time jackpot carousel aggregating live data from multiple providers — Cloudflare Worker for polling and caching, Remix service layer for live UI updates, with smooth animations. Live on Mecca Bingo and Grosvenor Casino.
+• Delivered a redesigned registration flow across multiple brands, improving conversion and onboarding UX.
+• Built and maintained a shared Storybook component library for design consistency across the full brand estate.
+
+Stack: TypeScript · React · Remix · GraphQL · Tailwind CSS · Storybook · Umbraco CMS · Cloudflare Workers · Git</div>
+    <button class="copy-btn" onclick="copyText('li-rank',this)">Copy</button>
+  </div>
+
+  <div class="li-section">
+    <div class="li-heading">reOS — Experience bullets</div>
+    <div class="li-content" id="li-reos">Frontend Developer at reOS — a PropTech startup building a property management platform. Joined as an intern and promoted to full-time Junior Developer after 4 months.
+
+• Built production features including a payment reconciliation tool, user invitation & role permission workflows, file management, and dashboard statistics.
+• Bridged the engineering and customer-facing operations teams; took on sprint PM functions and led QA follow-up on critical systems issues.
+
+Stack: TypeScript · React · Redux · RxJS · JavaScript · HTML · CSS/Sass · RESTful API</div>
+    <button class="copy-btn" onclick="copyText('li-reos',this)">Copy</button>
+  </div>
+
+  <div class="li-section">
+    <div class="li-heading">ML Final Project — Featured / Experience entry</div>
+    <div class="li-content" id="li-ml">Deep Learning Breast Cancer Classification — CM3070 Final Project, University of London (2026)
+github.com/peter-kautwima/DeepLearning-BreastCancer-Classification
+
+• Four-stage iterative pipeline: Baseline CNN → Frozen VGG16 → Regularisation → Fine-tuning.
+• Best model: AUC 0.7678, sensitivity 0.7055 — 64% relative sensitivity gain over baseline, exceeding mean individual radiologist AUC (McKinney et al. 2020).
+• Grad-CAM explainability via custom GradientTape workaround for Keras 3 graph disconnection.
+• Fully reproducible on a public clinical dataset (CBIS-DDSM).
+
+Stack: Python · TensorFlow/Keras · Jupyter Notebooks · NumPy · Scikit-learn · Matplotlib · pydicom · Google Colab</div>
+    <button class="copy-btn" onclick="copyText('li-ml',this)">Copy</button>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== PLAIN TEXT ===== -->
+<div id="txt-panel" class="panel">
+<div style="max-width:760px;margin:0 auto;padding:32px 40px">
+  <p style="font-size:12px;color:#888;font-family:Arial,sans-serif;margin-bottom:20px">Click the box to select all — paste into Google Docs, Word, or Notion.</p>
+  <div class="txt-label">Full CV — Markdown</div>
+  <textarea class="txt-box" rows="120" onclick="this.select()" readonly>
+# Peter Kautwima
+**Software Engineer — Frontend & Machine Learning / AI**
+
+kautwima@gmail.com | Cape Town, South Africa
+github.com/peter-kautwima | linkedin.com/in/peter-kautwima
+
+---
+
+## Profile
+
+Software Engineer with five years of professional experience — including three years delivering production frontend systems across 11 brands at a FTSE40 company — and a BSc in Machine Learning & AI graduating 2026. The combination of deep frontend expertise and hands-on ML/AI knowledge positions me for roles building intelligent, AI-powered products where both skill sets are used together. Early adopter of AI-assisted development (GitHub Copilot in production since 2024; working with AI models since 2022). Based in Cape Town, UTC+2 — fully aligned with UK and EU working hours. Open to remote Intermediate or Senior Software Engineering roles.
+
+---
+
+## Featured Project
+
+**Deep Learning Breast Cancer Classification — CM3070 Final Project, University of London (2026)**
+github.com/peter-kautwima/DeepLearning-BreastCancer-Classification
+
+- Built an end-to-end deep learning pipeline for malignant/benign mammogram classification on the CBIS-DDSM clinical dataset (~3,500 biopsy-verified ROI patches).
+- Four-stage iterative pipeline: Baseline CNN → Frozen VGG16 → Regularisation (Dropout + L2) → Fine-tuning. Best model: AUC 0.7678, sensitivity 0.7055 — 64% relative sensitivity gain over baseline, exceeding mean individual radiologist AUC (McKinney et al. 2020).
+- Implemented Grad-CAM explainability via a custom GradientTape workaround for a Keras 3 graph disconnection issue.
+- Fully reproducible on a public dataset with stratified splits, class-imbalance weighting, and training-only augmentation.
+- Stack: Python · TensorFlow/Keras · Jupyter Notebooks · NumPy · Pandas · Scikit-learn · Matplotlib · pydicom · Google Colab
+
+---
+
+## Experience
+
+**Intermediate Software Engineer — The Rank Group** | Dec 2022 – Feb 2026
+FTSE40 international gaming & entertainment · ~5,000 employees globally · Cape Town office scaled from ~50 to ~150 — enterprise backing with a startup-scale team
+
+- Delivered frontend across a multi-brand unification initiative consolidating ~11 brands — including Mecca Bingo and Grosvenor Casino — onto a single Umbraco CMS. Core engineering team of ~10.
+- **Jackpot Carousel:** Built a real-time jackpot carousel aggregating live data from multiple providers. Designed a Cloudflare Worker to poll and cache jackpot values; built a Remix service layer to push live updates to the UI with smooth animations. Live on Mecca Bingo and Grosvenor Casino.
+- Delivered a redesigned registration flow across multiple brands, improving conversion and onboarding UX.
+- Built and maintained a shared Storybook component library ensuring design consistency across the full brand estate.
+- Stack: TypeScript · React · Remix · GraphQL · Tailwind CSS · Storybook · Umbraco CMS · Cloudflare Workers · Git
+
+---
+
+**Frontend Developer — Bertha Centre, UCT Graduate School of Business** | Jul 2022 – Mar 2023
+Part-time retainer · Leading social innovation research hub
+
+- Maintained and extended the public-facing web presence for the Bertha Centre.
+- Stack: JavaScript · GatsbyJS · Tailwind CSS · Netlify CMS · Netlify
+
+---
+
+**Frontend Developer — reOS** | Jul 2021 – Oct 2022
+PropTech startup · Joined as intern, promoted to full-time Junior after 4 months
+
+- Built production features: payment reconciliation tool, user invitation & role permission workflows, file management, and dashboard statistics.
+- Bridged development and customer-facing operations teams; took on sprint PM functions and led QA follow-up on critical issues.
+- Stack: TypeScript · React · Redux · RxJS · JavaScript · HTML · CSS/Sass · RESTful API
+
+---
+
+**Financial Director & Head Booker — The Fantastic Agency** | Nov 2019 – Feb 2021
+- Managed a portfolio of 250 models; oversaw financials, bank reconciliation, and booking operations. Revenue increased twofold over two years.
+
+---
+
+**Freelance WordPress Developer** | 2019
+- Built tailored websites for small businesses across branding, UX, and functionality.
+
+---
+
+**Founder — Supa Tutor & Mathamagicians (PTY)** | May 2011 – Jun 2021
+EdTech startup · Maths, English & Coding · Three continents · 10 years
+
+- Founded and ran an EdTech platform for 10 years. Received an acquisition offer in 2015; chose to continue building. Developed an interactive learning platform in 2018 and piloted online courses at Summit House College.
+
+---
+
+## Technical Skills
+
+**Frontend (proficient):** TypeScript · JavaScript · React · Redux · GraphQL · HTML · CSS/Sass · Tailwind CSS · Storybook · CSS Modules · Remix · GatsbyJS · RxJS
+
+**Infrastructure & tooling:** Cloudflare Workers · Netlify · Umbraco CMS · Git / GitHub · RESTful APIs
+
+**AI tooling:** GitHub Copilot (production, ~2 yrs) · LLMs & AI models since 2022 · Prompt engineering
+
+**Machine learning / AI:** Python · TensorFlow/Keras · Transfer Learning · CNNs · Grad-CAM · NumPy · Pandas · Scikit-learn · Matplotlib · pydicom · Jupyter Notebooks · Google Colab
+
+**Also used:** Node.js · SQL · Express.js · Next.js · Prisma · tRPC · Bootstrap · Jest · Cypress · C++
+
+---
+
+## Education
+
+**BSc (Honours) Computer Science — Machine Learning & Artificial Intelligence**
+University of London (Goldsmiths) · Graduating 2026
+
+**Shaw Academy** — Web Development, Web Design, Financial Trading & Investment · 2019
+
+Google IT Support Professional Certificate · 2022
+
+University of Cape Town — 2nd year, Chartered Accounting & Information Systems · 2009–2010
+
+Camps Bay High School — Matriculated, 7th in grade · 2008
+Deputy Head Prefect · 1st Team Tennis · 1st Team Squash
+  </textarea>
+</div>
+</div>
+
+<script>
+function show(tab,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(tab+'-panel').classList.add('active');
+  el.classList.add('active');
+}
+function copyText(id,btn){
+  const el=document.getElementById(id);
+  navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
+</script>
+</body>
+</html>
